@@ -542,6 +542,30 @@ bool LEX::add_alter_list(LEX_CSTRING name, LEX_CSTRING new_name, bool exists)
 }
 
 
+bool LEX::add_alter_list_item_convert_to_charset(
+                                             THD *thd,
+                                             CHARSET_INFO *cs,
+                                             const Lex_charset_collation_st &cl)
+{
+  if (!cs)
+  {
+    Lex_charset_collation_st tmp;
+    tmp.set_charset_collate_default(thd->variables.collation_database);
+    if (!(cs= tmp.charset_collation()))
+      return true; // Should not actually happen
+  }
+
+  Lex_explicit_charset_opt_collate tmp(cs, false);
+  if (tmp.merge_opt_collate_or_error(cl) ||
+      create_info.add_alter_list_item_convert_to_charset(
+                    Lex_charset_collation(tmp)))
+    return true;
+
+  alter_info.flags|= ALTER_CONVERT_TO;
+  return false;
+}
+
+
 void LEX::init_last_field(Column_definition *field,
                           const LEX_CSTRING *field_name)
 {
@@ -11864,6 +11888,31 @@ bool LEX::sp_create_set_password_instr(THD *thd,
   if (sphead)
     sphead->m_flags|= sp_head::HAS_SET_AUTOCOMMIT_STMT;
   return sp_create_assignment_instr(thd, no_lookahead);
+}
+
+
+bool LEX::set_names(const char *pos,
+                    CHARSET_INFO *ci,
+                    const Lex_charset_collation_st &coll,
+                    bool no_lookahead)
+{
+  Lex_explicit_charset_opt_collate
+    cs(ci ? ci : global_system_variables.character_set_client, false);
+  if (unlikely(cs.merge_opt_collate_or_error(coll)))
+    return true;
+  return set_names(pos, cs.charset_and_collation(), no_lookahead);
+}
+
+
+bool LEX::set_names(const char *pos, CHARSET_INFO *cs, bool no_lookahead)
+{
+  if (sp_create_assignment_lex(thd, pos))
+    return true;
+  set_var_collation_client *var;
+  var= new (thd->mem_root) set_var_collation_client(cs, cs, cs);
+  return unlikely(var == NULL) ||
+         unlikely(thd->lex->var_list.push_back(var, thd->mem_root)) ||
+         unlikely(sp_create_assignment_instr(thd, no_lookahead));
 }
 
 

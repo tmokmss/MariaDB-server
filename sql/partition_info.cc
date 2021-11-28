@@ -1007,8 +1007,9 @@ bool vers_create_partitions(THD *thd, TABLE_LIST* tl, uint num_parts)
       goto exit;
     }
     DBUG_ASSERT(partition_changed);
-    if (mysql_prepare_alter_table(thd, table, &create_info, &alter_info,
-                                  &alter_ctx))
+    if (mysql_prepare_alter_table(thd, table, &create_info,
+                                  Lex_maybe_default_charset_collation(),
+                                  &alter_info, &alter_ctx))
     {
       my_error(ER_VERS_HIST_PART_FAILED, MYF(ME_WARNING),
                tl->db.str, tl->table_name.str);

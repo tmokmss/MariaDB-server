@@ -3818,6 +3818,11 @@ public:
 
   int case_stmt_action_then();
   bool setup_select_in_parentheses();
+  bool set_names(const char *pos,
+                 CHARSET_INFO *cs,
+                 const Lex_charset_collation_st &coll,
+                 bool no_lookahead);
+  bool set_names(const char *pos, CHARSET_INFO *cs, bool no_lookahead);
   bool set_trigger_new_row(const LEX_CSTRING *name, Item *val);
   bool set_trigger_field(const LEX_CSTRING *name1, const LEX_CSTRING *name2,
                          Item *val);
@@ -4390,6 +4395,9 @@ public:
   bool add_alter_list(LEX_CSTRING par_name, Virtual_column_info *expr,
                       bool par_exists);
   bool add_alter_list(LEX_CSTRING name, LEX_CSTRING new_name, bool exists);
+  bool add_alter_list_item_convert_to_charset(THD *thd,
+                                           CHARSET_INFO *cs,
+                                           const Lex_charset_collation_st &cl);
   void set_command(enum_sql_command command,
                    DDL_options_st options)
   {

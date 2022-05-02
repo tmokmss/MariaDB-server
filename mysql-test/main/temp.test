@@ -1,0 +1,15 @@
+SET @schema_array= '{"type":"array"}';
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2, {"key1":"val1"}]');
+
+
+SET @schema_array= '{"type":"array",
+                     "maxItems": 4,
+                     "minItems": 2}';
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2, {"key1":"val1"}]');
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2, false, null, "foobar"]');
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1]');
+SET @schema_array= '{"maxItems": 4,
+                     "minItems": 2}';
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2, {"key1":"val1"}]');
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2, false, null, "foobar"]');
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2]');

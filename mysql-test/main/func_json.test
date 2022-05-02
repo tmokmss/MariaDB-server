@@ -1536,3 +1536,101 @@ SELECT * FROM JSON_TABLE('{"foo":["bar","qux"]}','$**.*[0]' COLUMNS(col1 CHAR(8)
 --echo #
 --echo # End of 10.9 Test
 --echo #
+
+--echo #
+--echo # Beginning of 10.10 test
+--echo #
+
+--echo #
+--echo # MDEV-27128: Implement JSON Schema Validation FUNCTION
+--echo #
+--echo # Checking empty schema with empty json document
+
+SET @schema= '{}';
+
+SELECT JSON_SCHEMA_VALID(@schema, '');
+SELECT JSON_SCHEMA_VALID(@schema, '{}');
+SELECT JSON_SCHEMA_VALID(@schema, '[]');
+SELECT JSON_SCHEMA_VALID(@schema, 'null');
+SELECT JSON_SCHEMA_VALID(@schema, 'true');
+SELECT JSON_SCHEMA_VALID(@schema, 'false');
+
+--echo # Checking scalar against json schema
+
+--echo # Checking number
+
+SET @schema_number= '{
+  "maximum":7,
+  "minimum": 3,
+  "multipleOf":3
+}';
+SELECT JSON_SCHEMA_VALID(@schema_number, '2');
+
+SET @schema_number= '{
+  "type": "number",
+  "maximum":7,
+  "minimum": 3,
+  "multipleOf":3
+}';
+
+SELECT JSON_SCHEMA_VALID(@schema_number, '2');
+SELECT JSON_SCHEMA_VALID(@schema_number, '6');
+SELECT JSON_SCHEMA_VALID(@schema_number, '9');
+SELECT JSON_SCHEMA_VALID(@schema_number, '5');
+
+SET @schema_number= '{
+  "type": "number",
+  "maximum":7,
+  "minimum": 3,
+  "multipleOf":3,
+  "const": 4
+}';
+
+--echo # Checking string
+
+SET @schema_string= '{
+  "type": "string",
+  "maxLength":7,
+  "minLength": 4
+}';
+SELECT JSON_SCHEMA_VALID(@schema_string, '"foobar"');
+
+SET @schema_string= '{
+  "type": "string",
+  "maxLength": 10,
+  "minLength": 8 
+}';
+
+SELECT JSON_SCHEMA_VALID(@schema_string, '"foobar"');
+SELECT JSON_SCHEMA_VALID(@schema_string, '"foobar123"');
+
+SET @schema_string= '{
+  "type": "string",
+  "maxLength": 10,
+  "minLength": 3,
+  "const": "foobar"
+}';
+
+SELECT JSON_SCHEMA_VALID(@schema_string, '"foobar123"');
+
+--echo # Validating non-scalar
+
+--echo # Validating array
+
+SET @schema_array= '{"type":"array"}';
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2, {"key1":"val1"}]');
+
+
+SET @schema_array= '{"type":"array",
+                     "maxItems": 4,
+                     "minItems": 2}';
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2, {"key1":"val1"}]');
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2, false, null, "foobar"]');
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1]');
+SET @schema_array= '{"maxItems": 4,
+                     "minItems": 2}';
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2, {"key1":"val1"}]');
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2, false, null, "foobar"]');
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2]');
+
+--echo # End of 10.10 Test

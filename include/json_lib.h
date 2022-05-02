@@ -443,6 +443,51 @@ int json_normalize(DYNAMIC_STRING *result,
 
 int json_skip_array_and_count(json_engine_t *j, int* n_item);
 
+typedef struct const_details
+{
+  enum json_value_types const_type;
+  json_engine_t const_json_value;
+  int has_const;
+} st_const_details;
+
+typedef struct common_property
+{
+  enum json_value_types type;
+  st_const_details const_details;
+} st_common_property;
+
+enum number_property_with_flag
+{ HAS_NO_NUM_FLAG=0, HAS_MIN=2, HAS_MAX=4, HAS_MULTIPLE_OF=8 };
+typedef struct number_property
+{
+  double max, min, multiple_of;
+  uint number_property_flag;
+} st_number_property;
+
+enum string_property_with_flag
+{ HAS_NO_STR_FLAG= 0, HAS_MAX_LEN= 2, HAS_MIN_LEN= 4};
+typedef struct string_property
+{
+  double max_len, min_len;
+  uint string_property_flag;
+}st_string_property;
+
+enum array_property_with_flag
+{ HAS_NO_ARRAY_FLAG= 0, HAS_MAX_ITEMS= 2, HAS_MIN_ITEMS= 4};
+typedef struct array_property
+{
+  double max_items, min_items;
+  uint array_property_flag;
+}st_array_property;
+
+typedef struct json_schema_details
+{
+  st_common_property common_property;
+  st_number_property number_property;
+  st_string_property string_property;
+  st_array_property array_property;
+} st_json_schema_details;
+
 #ifdef  __cplusplus
 }
 #endif

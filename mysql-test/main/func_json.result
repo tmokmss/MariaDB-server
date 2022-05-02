@@ -2286,3 +2286,125 @@ bar
 #
 # End of 10.9 Test
 #
+#
+# Beginning of 10.10 test
+#
+#
+# MDEV-27128: Implement JSON Schema Validation FUNCTION
+#
+# Checking empty schema with empty json document
+SET @schema= '{}';
+SELECT JSON_SCHEMA_VALID(@schema, '');
+JSON_SCHEMA_VALID(@schema, '')
+0
+Warnings:
+Warning	4037	Unexpected end of JSON text in argument 2 to function 'json_schema_valid'
+SELECT JSON_SCHEMA_VALID(@schema, '{}');
+JSON_SCHEMA_VALID(@schema, '{}')
+0
+SELECT JSON_SCHEMA_VALID(@schema, '[]');
+JSON_SCHEMA_VALID(@schema, '[]')
+0
+SELECT JSON_SCHEMA_VALID(@schema, 'null');
+JSON_SCHEMA_VALID(@schema, 'null')
+0
+SELECT JSON_SCHEMA_VALID(@schema, 'true');
+JSON_SCHEMA_VALID(@schema, 'true')
+0
+SELECT JSON_SCHEMA_VALID(@schema, 'false');
+JSON_SCHEMA_VALID(@schema, 'false')
+0
+# Checking scalar against json schema
+# Checking number
+SET @schema_number= '{
+  "maximum":7,
+  "minimum": 3,
+  "multipleOf":3
+}';
+SELECT JSON_SCHEMA_VALID(@schema_number, '2');
+JSON_SCHEMA_VALID(@schema_number, '2')
+0
+SET @schema_number= '{
+  "type": "number",
+  "maximum":7,
+  "minimum": 3,
+  "multipleOf":3
+}';
+SELECT JSON_SCHEMA_VALID(@schema_number, '2');
+JSON_SCHEMA_VALID(@schema_number, '2')
+0
+SELECT JSON_SCHEMA_VALID(@schema_number, '6');
+JSON_SCHEMA_VALID(@schema_number, '6')
+1
+SELECT JSON_SCHEMA_VALID(@schema_number, '9');
+JSON_SCHEMA_VALID(@schema_number, '9')
+0
+SELECT JSON_SCHEMA_VALID(@schema_number, '5');
+JSON_SCHEMA_VALID(@schema_number, '5')
+0
+SET @schema_number= '{
+  "type": "number",
+  "maximum":7,
+  "minimum": 3,
+  "multipleOf":3,
+  "const": 4
+}';
+# Checking string
+SET @schema_string= '{
+  "type": "string",
+  "maxLength":7,
+  "minLength": 4
+}';
+SELECT JSON_SCHEMA_VALID(@schema_string, '"foobar"');
+JSON_SCHEMA_VALID(@schema_string, '"foobar"')
+1
+SET @schema_string= '{
+  "type": "string",
+  "maxLength": 10,
+  "minLength": 8 
+}';
+SELECT JSON_SCHEMA_VALID(@schema_string, '"foobar"');
+JSON_SCHEMA_VALID(@schema_string, '"foobar"')
+0
+SELECT JSON_SCHEMA_VALID(@schema_string, '"foobar123"');
+JSON_SCHEMA_VALID(@schema_string, '"foobar123"')
+1
+SET @schema_string= '{
+  "type": "string",
+  "maxLength": 10,
+  "minLength": 3,
+  "const": "foobar"
+}';
+SELECT JSON_SCHEMA_VALID(@schema_string, '"foobar123"');
+JSON_SCHEMA_VALID(@schema_string, '"foobar123"')
+0
+# Validating non-scalar
+# Validating array
+SET @schema_array= '{"type":"array"}';
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2, {"key1":"val1"}]');
+JSON_SCHEMA_VALID(@schema_array, '[1, 2, {"key1":"val1"}]')
+1
+SET @schema_array= '{"type":"array",
+                     "maxItems": 4,
+                     "minItems": 2}';
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2, {"key1":"val1"}]');
+JSON_SCHEMA_VALID(@schema_array, '[1, 2, {"key1":"val1"}]')
+1
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2, false, null, "foobar"]');
+JSON_SCHEMA_VALID(@schema_array, '[1, 2, false, null, "foobar"]')
+0
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1]');
+JSON_SCHEMA_VALID(@schema_array, '[1]')
+0
+SET @schema_array= '{"maxItems": 4,
+                     "minItems": 2}';
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2, {"key1":"val1"}]');
+JSON_SCHEMA_VALID(@schema_array, '[1, 2, {"key1":"val1"}]')
+0
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2, false, null, "foobar"]');
+JSON_SCHEMA_VALID(@schema_array, '[1, 2, false, null, "foobar"]')
+0
+SELECT JSON_SCHEMA_VALID(@schema_array, '[1, 2]');
+JSON_SCHEMA_VALID(@schema_array, '[1, 2]')
+0
+# End of 10.10 Test

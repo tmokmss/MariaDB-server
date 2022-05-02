@@ -18,7 +18,7 @@
 #include "sql_priv.h"
 #include "sql_class.h"
 #include "item.h"
-
+#include "field.h"
 
 /*
   Compare ASCII string against the string with the specified
@@ -4462,6 +4462,372 @@ error:
 }
 
 bool Item_func_json_overlaps::fix_length_and_dec(THD *thd)
+{
+  a2_constant= args[1]->const_item();
+  a2_parsed= FALSE;
+  set_maybe_null();
+
+  return Item_bool_func::fix_length_and_dec(thd);
+}
+
+void initialize_curr_step(st_json_schema_details *cur_step)
+{
+  cur_step->common_property.type= JSON_VALUE_UNINITIALIZED;
+  cur_step->common_property.const_details.has_const= 0;
+  cur_step->number_property.number_property_flag= 0;
+  cur_step->string_property.string_property_flag= 0;
+  cur_step->array_property.array_property_flag= 0;
+}
+
+/*
+  Return true if keyword is not handled
+*/
+bool handle_common_property_keyword(const char *curr_key,
+                                    st_common_property *cur_common_property,
+                                    json_engine_t *je, int key_len)
+{
+  if (!strncmp((const char*)curr_key, "type", key_len))
+  {
+    if (!strncmp((const char*)je->value, "number", je->value_len))
+      cur_common_property->type= JSON_VALUE_NUMBER;
+    else if(!strncmp((const char*)je->value, "string", je->value_len))
+      cur_common_property->type= JSON_VALUE_STRING;
+    else if(!strncmp((const char*)je->value, "array", je->value_len))
+      cur_common_property->type= JSON_VALUE_ARRAY;
+    else if(!strncmp((const char*)je->value, "object", je->value_len))
+      cur_common_property->type= JSON_VALUE_OBJECT;
+    else if (!strncmp((const char*)je->value, "true", je->value_len))
+      cur_common_property->type= JSON_VALUE_TRUE;
+    else if (!strncmp((const char*)je->value, "false", je->value_len))
+      cur_common_property->type= JSON_VALUE_FALSE;
+    else if (!strncmp((const char*)je->value, "null", je->value_len))
+      cur_common_property->type= JSON_VALUE_NULL;
+    else
+      return true;
+  }
+  else if(!strncmp((const char*)curr_key, "const", key_len))
+  {
+    json_engine_t *cur_const_json_value=
+                  &cur_common_property->const_details.const_json_value;
+
+    cur_common_property->const_details.has_const= 1;
+    cur_common_property->const_details.const_type= je->value_type;
+    cur_const_json_value->s.c_str= je->value;
+    cur_const_json_value->s.str_end= je->value+je->value_len;
+    cur_const_json_value->s.cs= je->s.cs;
+    cur_const_json_value->s.wc= je->s.wc;
+
+    return false;
+  }
+  return false;
+}
+
+/*
+  Return true if keyword not handled
+*/
+bool handle_number_property_keyword(const char *curr_key,
+                                   st_number_property *cur_number_property,
+                                   double val, int key_len)
+{
+  if (!strncmp((const char*)curr_key, "maximum", key_len))
+  {
+    cur_number_property->max= val;
+    cur_number_property->number_property_flag|= HAS_MAX;
+  }
+  else if (!strncmp((const char*)curr_key, "minimum", key_len))
+  {
+    cur_number_property->min= val;
+    cur_number_property->number_property_flag|= HAS_MIN;
+  }
+  else if (!strncmp((const char*)curr_key, "multipleOf", key_len))
+  {
+    /*
+     value of "multipleOf" should be >=0 according to rules for json schema
+    */
+    if (val <= 0)
+     return true;
+    cur_number_property->multiple_of= val;
+    cur_number_property->number_property_flag|= HAS_MULTIPLE_OF;
+  }
+  else
+    return true;
+
+  return false;
+}
+
+/*
+Return true if keyword not handled
+*/
+bool handle_string_property_keyword(const char *curr_key,
+                                   st_string_property *cur_string_property,
+                                   double val, int key_len)
+{
+  if (!strncmp((const char*)curr_key, "maxLength", key_len))
+  {
+    cur_string_property->max_len= val;
+    cur_string_property->string_property_flag|= HAS_MAX_LEN;
+  }
+  else if (!strncmp((const char*)curr_key, "minLength", key_len))
+  {
+    cur_string_property->min_len= val;
+    cur_string_property->string_property_flag|= HAS_MIN_LEN;
+  }
+  else
+    return true;
+
+  return false;
+}
+
+/*
+  Return true if keyword not handled
+*/
+bool handle_array_property_keyword(const char *curr_key,
+                                   st_array_property *cur_array_property,
+                                   double val, int key_len)
+{
+  if (!strncmp((const char*)curr_key, "maxItems", key_len))
+  {
+    cur_array_property->max_items= val;
+    cur_array_property->array_property_flag|= HAS_MAX_ITEMS;
+  }
+  else if (!strncmp((const char*)curr_key, "minItems", key_len))
+  {
+    cur_array_property->min_items= val;
+    cur_array_property->array_property_flag|= HAS_MIN_ITEMS;
+  }
+  else
+    return true;
+
+  return false;
+}
+
+/*
+Return true if keyword not handled
+*/
+bool handle_keyword(const char *curr_key, st_json_schema_details *cur_step,
+                    json_engine_t *je, int key_len)
+{
+  int res= 0, err;
+  char *end;
+  double val= je->s.cs->strntod((char *) je->value, je->value_len, &end,
+                                &err);
+
+  if (!strncmp((const char*)curr_key, "type", key_len) ||
+      !strncmp((const char*)curr_key, "const", key_len))
+    res= handle_common_property_keyword(curr_key, &(cur_step->common_property),
+                                        je, key_len);
+  else if (cur_step->common_property.type == JSON_VALUE_UNINITIALIZED ||
+        cur_step->common_property.type == JSON_VALUE_NUMBER)
+    res= handle_number_property_keyword(curr_key,
+                                        &(cur_step->number_property),
+                                        val, key_len);
+  else if (cur_step->common_property.type == JSON_VALUE_UNINITIALIZED ||
+           cur_step->common_property.type == JSON_VALUE_STRING)
+    res= handle_string_property_keyword(curr_key,
+                                        &(cur_step->string_property),
+                                        val, key_len);
+  else if (cur_step->common_property.type == JSON_VALUE_UNINITIALIZED ||
+           cur_step->common_property.type == JSON_VALUE_ARRAY)
+    res= handle_array_property_keyword(curr_key,
+                                       &(cur_step->array_property),
+                                       val, key_len);
+  return res;
+}
+
+/*
+  Return true if can't validate
+*/
+bool validate_scalar(json_engine_t *je, st_json_schema_details *cur_step)
+{
+   st_const_details *cur_const_details=
+                      &cur_step->common_property.const_details;
+   json_engine_t  *cur_step_json= &(cur_const_details->const_json_value);
+
+  if (je->value_type == JSON_VALUE_NUMBER)
+  {
+    char *end;
+    int err;
+    uint cur_number_property_flag=
+                                cur_step->number_property.number_property_flag;
+    double val= je->s.cs->strntod((char *) je->value, je->value_len, &end, &err);
+    double temp= val / cur_step->number_property.multiple_of;
+    double res= cur_number_property_flag & HAS_MULTIPLE_OF ?
+                (temp - (long long int)temp) == 0 : true;
+    if (cur_step->common_property.const_details.has_const)
+    {
+     double cur_step_const_value=
+             cur_step_json->s.cs->strntod((char *)cur_step_json->s.c_str,
+              cur_step_json->s.str_end-cur_step_json->s.c_str, &end, &err);
+     if (val == cur_step_const_value)
+       return false;
+    }
+    else if ((cur_step->common_property.type == JSON_VALUE_NUMBER) &&
+        (cur_number_property_flag & HAS_MAX ?
+         val <=cur_step->number_property.max : true) &&
+        (cur_number_property_flag & HAS_MIN ?
+         val >= cur_step->number_property.min : true) &&
+        (cur_number_property_flag & HAS_MULTIPLE_OF ? res : true))
+      return false;
+  }
+  else if(je->value_type == JSON_VALUE_STRING)
+  {
+    if (cur_step->common_property.const_details.has_const)
+    {
+      char *je_str= (char*)malloc(je->value_len),
+            *cur_step_str= (char*)malloc(cur_step_json->s.str_end-
+                                        cur_step_json->s.c_str);
+      int res= 1;
+      strncpy(je_str, (const char*)je->value, je->value_len);
+      strncpy(cur_step_str, (const char*)cur_step_json->s.c_str,
+              cur_step_json->s.str_end-cur_step_json->s.c_str);
+
+      if (!strcmp((const char*)je_str, (const char*)cur_step_str))
+        res= false;
+
+      free(je_str);
+      free(cur_step_str);
+      return res;
+    }
+    else
+    {
+      uint cur_string_property_flag=
+                  cur_step->string_property.string_property_flag;
+      if ((cur_step->common_property.type == JSON_VALUE_STRING) &&
+          (cur_string_property_flag & HAS_MAX_LEN ?
+           je->value_len <= cur_step->string_property.max_len : true) &&
+          (cur_string_property_flag & HAS_MIN_LEN ?
+           je->value_len >= cur_step->string_property.min_len : true))
+        return false;
+    }
+  }
+  else
+    return false;
+
+  return true;
+}
+
+/*
+Return true if does not validate
+*/
+bool validate_non_scalar(json_engine_t *je,
+                         st_json_schema_details *cur_step)
+{
+  if (je->value_type == JSON_VALUE_ARRAY)
+  {
+    int number_of_elements;
+    st_array_property *cur_property_arr= &cur_step->array_property;
+    json_skip_array_and_count(je, &number_of_elements);
+    if ((cur_property_arr->array_property_flag & HAS_MAX_ITEMS ?
+         number_of_elements <= cur_property_arr->max_items : true) &&
+        (cur_property_arr->array_property_flag & HAS_MAX_ITEMS ?
+         number_of_elements >= cur_property_arr->min_items : true))
+      return false;
+  }
+  else
+  {
+    return false;
+  }
+
+  return true;
+}
+
+/*
+Return true if not validated
+*/
+bool validate_against_schema(json_engine_t *je,
+                             st_json_schema_details *cur_step)
+{
+  cur_step++;
+  if (json_read_value(je) ||
+      je->value_type != cur_step->common_property.type)
+    return true;
+
+  if (json_value_scalar(je) && validate_scalar(je, cur_step))
+    return true;
+  else if (validate_non_scalar(je, cur_step))
+     return true;
+
+  return false;
+}
+
+/*
+  Return true if error or does not validate
+*/
+bool validate_json_schema(json_engine_t *je, st_json_schema_details *cur_step)
+{
+ while (json_scan_next(je)==0)
+ {
+    switch(je->state)
+    {
+      case JST_KEY:
+      {
+        const uchar *key_end, *key_start= je->s.c_str;
+        do
+        {
+          key_end= je->s.c_str;
+        } while (json_read_keyname_chr(je) == 0);
+
+        int err= json_read_value(je);
+        if (err)
+          return true;
+        if (handle_keyword((const char*)key_start, cur_step, je,
+                            key_end - key_start))
+          return true;
+        break;
+      }
+      case JST_OBJ_START:
+        cur_step++;
+        initialize_curr_step(cur_step);
+        break;
+    }
+  }
+  return false;
+}
+
+longlong Item_func_json_schema_valid::val_int()
+{
+  String *js= args[0]->val_json(&tmp_js);
+  json_engine_t je, ve;
+  st_json_schema_details cur_step[JSON_DEPTH_LIMIT];
+
+  if ((null_value= args[0]->null_value))
+    return 0;
+
+  if (!a2_parsed)
+  {
+    val= args[1]->val_json(&tmp_val);
+    a2_parsed= a2_constant;
+  }
+
+  if (val == 0)
+  {
+    null_value= 1;
+    return 0;
+  }
+
+  json_scan_start(&je, js->charset(), (const uchar *) js->ptr(),
+                  (const uchar *) js->ptr() + js->length());
+
+  json_scan_start(&ve, val->charset(), (const uchar *) val->ptr(),
+                  (const uchar *) val->end());
+
+  if (validate_json_schema(&je, cur_step) ||
+      validate_against_schema(&ve, cur_step))
+    goto error;
+  if (unlikely(je.s.error || ve.s.error))
+    goto error;
+
+  return true;
+
+error:
+  if (je.s.error)
+    report_json_error(js, &je, 0);
+  if (ve.s.error)
+    report_json_error(val, &ve, 1);
+  return 0;
+}
+
+bool Item_func_json_schema_valid::fix_length_and_dec(THD *thd)
 {
   a2_constant= args[1]->const_item();
   a2_parsed= FALSE;

@@ -165,7 +165,7 @@ typedef start_new_trans *SPIDER_Open_tables_backup;
 
 #define SPIDER_TMP_SHARE_CHAR_PTR_COUNT     23
 #define SPIDER_TMP_SHARE_UINT_COUNT         SPIDER_TMP_SHARE_CHAR_PTR_COUNT
-#define SPIDER_TMP_SHARE_LONG_COUNT         20
+#define SPIDER_TMP_SHARE_LONG_COUNT         19
 #define SPIDER_TMP_SHARE_LONGLONG_COUNT      3
 
 #define SPIDER_MEM_CALC_LIST_NUM           314
@@ -903,7 +903,6 @@ typedef struct st_spider_share
   longlong           *monitoring_bg_interval;
   longlong           *monitoring_limit;
   longlong           *monitoring_sid;
-  long               *use_handlers;
   long               *connect_timeouts;
   long               *net_read_timeouts;
   long               *net_write_timeouts;
@@ -991,7 +990,6 @@ typedef struct st_spider_share
   uint               monitoring_bg_interval_length;
   uint               monitoring_limit_length;
   uint               monitoring_sid_length;
-  uint               use_handlers_length;
   uint               connect_timeouts_length;
   uint               net_read_timeouts_length;
   uint               net_write_timeouts_length;

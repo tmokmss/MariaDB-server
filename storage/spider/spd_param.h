@@ -299,10 +299,6 @@ int spider_param_udf_ct_bulk_insert_interval(
 longlong spider_param_udf_ct_bulk_insert_rows(
   longlong udf_ct_bulk_insert_rows
 );
-int spider_param_use_handler(
-  THD *thd,
-  int use_handler
-);
 int spider_param_error_read_mode(
   THD *thd,
   int error_read_mode

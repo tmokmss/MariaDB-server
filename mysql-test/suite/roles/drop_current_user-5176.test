@@ -5,7 +5,7 @@
 
 create user foo@localhost;
 grant create user on *.* to foo@localhost;
---connect (foo,localhost,foo,,)
+--connect (foo,localhost,foo,,"*NO-ONE*")
 drop user foo@localhost;
 select * from information_schema.applicable_roles;
 --error ER_NONEXISTING_GRANT

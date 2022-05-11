@@ -5,7 +5,7 @@ create role role3;
 grant role1 to foo;
 grant role2 to role1;
 grant role3 to foo;
-connect  foo, localhost, foo;
+connect  foo, localhost, foo,,"*NO-ONE*";
 select * from information_schema.applicable_roles;
 GRANTEE	ROLE_NAME	IS_GRANTABLE	IS_DEFAULT
 foo@%	role1	NO	NO
@@ -32,7 +32,7 @@ root@localhost	role1	YES	NO
 root@localhost	role2	YES	NO
 root@localhost	role3	YES	NO
 set default role none for foo;
-connect  foo, localhost, foo;
+connect  foo, localhost, foo,,"*NO-ONE*";
 select * from information_schema.applicable_roles;
 GRANTEE	ROLE_NAME	IS_GRANTABLE	IS_DEFAULT
 foo@%	role1	NO	NO

@@ -13,7 +13,7 @@ create user ''@localhost;
 create role r1;
 grant r1 to ''@localhost;
 
---connect (con1,localhost,nonexisting_user,,)
+--connect (con1,localhost,nonexisting_user,,"*NO-ONE*")
 select current_user;
 show grants;
 

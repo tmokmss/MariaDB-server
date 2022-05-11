@@ -24,7 +24,7 @@ DROP USER user1@localhost;
 
 CREATE USER user1@localhost;
 --eval GRANT $grant ON *.* TO user1@localhost
---connect(user1,localhost,user1,,)
+--connect(user1,localhost,user1,,"*NO-ONE*")
 --connection user1
 --eval SET GLOBAL $var=$value
 --error ER_GLOBAL_VARIABLE
@@ -39,7 +39,7 @@ DROP USER user1@localhost;
 
 CREATE USER user1@localhost;
 GRANT SUPER ON *.* TO user1@localhost;
---connect(user1,localhost,user1,,)
+--connect(user1,localhost,user1,,"*NO-ONE*")
 --connection user1
 --eval SET GLOBAL $var=$value
 --error ER_GLOBAL_VARIABLE

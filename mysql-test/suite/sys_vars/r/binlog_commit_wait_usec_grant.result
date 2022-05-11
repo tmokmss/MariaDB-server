@@ -20,7 +20,7 @@ DROP USER user1@localhost;
 # Test that "SET binlog_commit_wait_usec" is allowed with BINLOG ADMIN
 CREATE USER user1@localhost;
 GRANT BINLOG ADMIN ON *.* TO user1@localhost;
-connect user1,localhost,user1,,;
+connect user1,localhost,user1,,"*NO-ONE*";
 connection user1;
 SET GLOBAL binlog_commit_wait_usec=65536;
 SET binlog_commit_wait_usec=65536;
@@ -33,7 +33,7 @@ DROP USER user1@localhost;
 # Test that "SET binlog_commit_wait_usec" is allowed with SUPER
 CREATE USER user1@localhost;
 GRANT SUPER ON *.* TO user1@localhost;
-connect user1,localhost,user1,,;
+connect user1,localhost,user1,,"*NO-ONE*";
 connection user1;
 SET GLOBAL binlog_commit_wait_usec=65536;
 SET binlog_commit_wait_usec=65536;

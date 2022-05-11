@@ -6,7 +6,7 @@ INSTALL SONAME 'auth_gssapi';
 #
 --replace_result $GSSAPI_SHORTNAME GSSAPI_SHORTNAME
 eval CREATE USER '$GSSAPI_SHORTNAME' IDENTIFIED WITH gssapi;
-connect (con1,localhost,$GSSAPI_SHORTNAME,,);
+connect (con1,localhost,$GSSAPI_SHORTNAME,,"*NO-ONE*");
 --replace_result $GSSAPI_SHORTNAME GSSAPI_SHORTNAME
 SELECT USER(),CURRENT_USER();
 disconnect con1;
@@ -19,7 +19,7 @@ CREATE USER nosuchuser IDENTIFIED WITH gssapi;
 --disable_query_log
 --replace_regex /actual name '.*'/actual name 'GSSAPI_SHORTNAME'/
 --error ER_ACCESS_DENIED_ERROR
-connect (con1,localhost,nosuchuser,,);
+connect (con1,localhost,nosuchuser,,"*NO-ONE*");
 --enable_query_log
 DROP USER nosuchuser;
 
@@ -28,7 +28,7 @@ DROP USER nosuchuser;
 #
 --replace_result $GSSAPI_FULLNAME GSSAPI_FULLNAME
 eval CREATE USER usr1 IDENTIFIED WITH gssapi as '$GSSAPI_FULLNAME';
-connect (con1,localhost,usr1,,);
+connect (con1,localhost,usr1,,"*NO-ONE*");
 --replace_result $GSSAPI_FULLNAME GSSAPI_FULLNAME
 SELECT USER(),CURRENT_USER();
 disconnect con1;
@@ -39,7 +39,7 @@ CREATE USER nosuchuser IDENTIFIED WITH gssapi AS 'nosuchuser@EXAMPLE.COM';
 --disable_query_log
 --replace_regex /actual name '.*'/actual name 'GSSAPI_FULLNAME'/
 --error ER_ACCESS_DENIED_ERROR
-connect (con1,localhost,nosuchuser,,);
+connect (con1,localhost,nosuchuser,,"*NO-ONE*");
 --enable_query_log
 DROP USER nosuchuser;
 

@@ -58,7 +58,7 @@ drop role r1;
 drop user u2;
 create user foo@localhost;
 grant create user on *.* to foo@localhost;
-connect  con1, localhost, foo,,;
+connect  con1, localhost, foo,,"*NO-ONE*";
 create role look, isp, xxx, ppp;
 rename user current_user to nnnn@'%';
 drop role look, isp, xxx, ppp;

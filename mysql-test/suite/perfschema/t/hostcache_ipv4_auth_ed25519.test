@@ -43,7 +43,7 @@ error ER_ACCESS_DENIED_ERROR;
 connect con1, 127.0.0.1, plug2,bar,,$MASTER_MYPORT;
 source ../include/hostcache_dump.inc;
 
-connect con1, 127.0.0.1, plug2,foo,,$MASTER_MYPORT;
+connect con1, 127.0.0.1, plug2,foo,"*NO-ONE*",$MASTER_MYPORT;
 select current_user();
 disconnect con1;
 connection default;

@@ -12,7 +12,7 @@ create table db.t2 (b int);
 grant select on db.* to r1;
 grant r1 to beep@'%';
 
---connect (con1,localhost,beep,,)
+--connect (con1,localhost,beep,,"*NO-ONE*")
 show databases;
 --error ER_DBACCESS_DENIED_ERROR
 show create database db;
@@ -32,7 +32,7 @@ create user beep2@'%';
 
 grant update on db.* to r2;
 grant r2 to beep2;
---connect (con2,localhost,beep2,,)
+--connect (con2,localhost,beep2,,"*NO-ONE*")
 show databases;
 --error ER_DBACCESS_DENIED_ERROR
 show create database db;

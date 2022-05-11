@@ -533,7 +533,7 @@ INSERT INTO db1.t1 VALUES('Some very sensitive data goes here');
 CREATE USER 'no_rights'@'localhost';
 REVOKE ALL ON *.* FROM 'no_rights'@'localhost';
 FLUSH PRIVILEGES;
-connect  con1,localhost,no_rights,,;
+connect  con1,localhost,no_rights,,"*NO-ONE*";
 SELECT trigger_name FROM INFORMATION_SCHEMA.TRIGGERS
 WHERE trigger_schema = 'db1';
 trigger_name

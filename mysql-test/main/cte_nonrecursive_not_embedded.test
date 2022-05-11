@@ -20,9 +20,7 @@ GRANT USAGE ON db.* TO 'u1'@'localhost';
 GRANT SELECT ON db.t1 TO 'u1'@'localhost';
 FLUSH PRIVILEGES;
 
---connect (u1,'localhost',u1,,)
---connection u1
-USE db;
+--connect (u1,'localhost',u1,,db)
 
 WITH
 cte1 AS

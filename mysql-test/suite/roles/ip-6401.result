@@ -1,7 +1,7 @@
 create role r1;
 create user foo@'127.0.0.1';
 grant r1 to foo@'127.0.0.1';
-connect  con1,127.0.0.1,foo,,;
+connect  con1,127.0.0.1,foo,,"*NO-ONE*";
 show grants;
 Grants for foo@127.0.0.1
 GRANT `r1` TO `foo`@`127.0.0.1`

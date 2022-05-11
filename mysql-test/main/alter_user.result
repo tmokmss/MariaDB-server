@@ -28,7 +28,7 @@ SET @start_read_only = @@global.read_only;
 SET GLOBAL read_only=1;
 grant create user on *.* to foo;
 # Currently no READ_ONLY ADMIN privileges.
-connect  a, localhost, foo;
+connect  a, localhost, foo,,"*NO-ONE*";
 select @@global.read_only;
 @@global.read_only
 1
@@ -38,7 +38,7 @@ ERROR HY000: The MariaDB server is running with the --read-only option so it can
 connection default;
 grant READ_ONLY ADMIN on *.* to foo;
 # We now have READ_ONLY ADMIN privilege. We should be able to run alter user.
-connect  b, localhost, foo;
+connect  b, localhost, foo,,"*NO-ONE*";
 alter user foo;
 connection default;
 SET GLOBAL read_only = @start_read_only;
@@ -116,7 +116,7 @@ drop user foo;
 # Bug #29882299: ALTER USER ... IDENTIFIED WITH ... BY ... SHOULD BE A PRIVILEGED OPERATION
 #
 create user foo@localhost;
-connect x,localhost,foo;
+connect x,localhost,foo,,"*NO-ONE*";
 alter user current_user identified with 'something';
 ERROR 42000: Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
 connection default;

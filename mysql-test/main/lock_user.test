@@ -15,7 +15,7 @@ alter user user1@localhost account unlock;
 create user user3@localhost account lock;
 drop user user3@localhost;
 
-connect(con1,localhost,user1);
+connect(con1,localhost,user1,,"*NO-ONE*");
 connection con1;
 --error ER_SPECIFIC_ACCESS_DENIED_ERROR
 alter user user2@localhost account lock;
@@ -31,7 +31,7 @@ alter user user1@localhost account lock;
 --replace_result $MASTER_MYPORT MYSQL_PORT $MASTER_MYSOCK MYSQL_SOCK
 --error ER_ACCOUNT_HAS_BEEN_LOCKED
 connect(con1,localhost,user1);
-connect(con2,localhost,user2);
+connect(con2,localhost,user2,,"*NO-ONE*");
 disconnect con2;
 connection default;
 alter user user1@localhost account unlock;
@@ -106,7 +106,7 @@ drop user newuser@localhost;
 --echo # Users should be able to lock themselves
 --echo #
 grant CREATE USER on *.* to user1@localhost;
-connect(con1,localhost,user1);
+connect(con1,localhost,user1,,"*NO-ONE*");
 connection con1;
 alter user user1@localhost account lock;
 disconnect con1;
@@ -121,7 +121,7 @@ alter user user1@localhost account unlock;
 --echo # had been established before the accounts were locked
 --echo #
 grant CREATE USER on *.* to user1@localhost;
-connect(con1,localhost,user1);
+connect(con1,localhost,user1,,"*NO-ONE*");
 alter user user1@localhost account lock;
 connection con1;
 alter user user1@localhost account unlock;

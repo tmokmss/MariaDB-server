@@ -29,7 +29,7 @@ select * from information_schema.system_variables
 
 create user foo@localhost;
 
-connect foo,localhost,foo;
+connect foo,localhost,foo,,"*NO-ONE*";
 select global_value_path from information_schema.system_variables where variable_name='plugin_maturity';
 connection default;
 replace_regex /\/.*\//var\//;

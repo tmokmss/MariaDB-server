@@ -1,5 +1,5 @@
 create user a@localhost;
-connect a,localhost,a;
+connect a,localhost,a,,"*NO-ONE*";
 select * from performance_schema.global_status where variable_name='b';
 VARIABLE_NAME	VARIABLE_VALUE
 connection default;

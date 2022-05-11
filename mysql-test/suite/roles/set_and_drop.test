@@ -23,7 +23,7 @@ grant execute on procedure mysqltest1.pr1 to role2;
 grant select on mysqltest1.t1 to role2;
 grant select (a) on mysqltest1.t2 to role2;
 
-connect (foo,localhost,foo);
+connect (foo,localhost,foo,,"*NO-ONE*");
 
 --error ER_SPECIFIC_ACCESS_DENIED_ERROR
 flush tables;

@@ -383,7 +383,7 @@ INSERT INTO test1 VALUES (5, 'testit');
 GRANT SELECT (id) ON TABLE bug30269.test1 TO 'bug30269'@'localhost';
 GRANT SELECT ON TABLE bug30269.view1 TO 'bug30269'@'localhost';
 set global query_cache_size= 81920;
-connect  bug30269, localhost, bug30269,,;
+connect  bug30269, localhost, bug30269,,"*NO-ONE*";
 connection bug30269;
 USE bug30269;
 show status like 'Qcache_queries_in_cache';

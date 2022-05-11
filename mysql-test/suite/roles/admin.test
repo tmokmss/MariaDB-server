@@ -15,7 +15,7 @@ create role role3 with admin role1;
 create role role4 with admin root@localhost;
 
 # privilege checks, one needs SUPER to specify an arbitrary admin
-connect (c1, localhost, foo,,);
+connect (c1, localhost, foo,,"*NO-ONE*");
 --error ER_SPECIFIC_ACCESS_DENIED_ERROR
 create role role5 with admin root@localhost;
 --error ER_SPECIFIC_ACCESS_DENIED_ERROR

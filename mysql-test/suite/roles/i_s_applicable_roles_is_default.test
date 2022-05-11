@@ -9,7 +9,7 @@ grant role2 to role1;
 grant role3 to foo;
 
 
-connect (foo, localhost, foo);
+connect (foo, localhost, foo,,"*NO-ONE*");
 --sorted_result
 select * from information_schema.applicable_roles;
 
@@ -29,7 +29,7 @@ connection default;
 select * from information_schema.applicable_roles;
 
 set default role none for foo;
-connect (foo, localhost, foo);
+connect (foo, localhost, foo,,"*NO-ONE*");
 --sorted_result
 select * from information_schema.applicable_roles;
 

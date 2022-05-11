@@ -1,6 +1,6 @@
 DROP USER dbdict_test@localhost;
 CREATE USER dbdict_test@localhost;
-connect  con,localhost,dbdict_test,,;
+connect  con,localhost,dbdict_test,,"*NO-ONE*";
 
 SELECT *
 FROM information_schema.character_sets

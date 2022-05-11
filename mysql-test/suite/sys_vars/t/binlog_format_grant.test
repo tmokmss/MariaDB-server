@@ -26,7 +26,7 @@ DROP USER user1@localhost;
 
 CREATE USER user1@localhost;
 GRANT BINLOG ADMIN ON *.* TO user1@localhost;
---connect(user1,localhost,user1,,)
+--connect(user1,localhost,user1,,"*NO-ONE*")
 --connection user1
 SET binlog_format=mixed;
 SET GLOBAL binlog_format=mixed;
@@ -39,7 +39,7 @@ DROP USER user1@localhost;
 
 CREATE USER user1@localhost;
 GRANT SUPER ON *.* TO user1@localhost;
---connect(user1,localhost,user1,,)
+--connect(user1,localhost,user1,,"*NO-ONE*")
 --connection user1
 SET binlog_format=mixed;
 SET GLOBAL binlog_format=mixed;

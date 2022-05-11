@@ -24,14 +24,14 @@ create definer=definer@localhost sql security invoker view mysqltest3.v3i as sel
 
 exec $MYSQL_DUMP --compact -B mysqltest1 mysqltest2 mysqltest3;
 
-connect inv,localhost,invoker;
+connect inv,localhost,invoker,,"*NO-ONE*";
 error ER_DBACCESS_DENIED_ERROR;
 lock table mysqltest3.v3 write;
 disconnect inv;
 connection default;
 
 grant lock tables on mysqltest3.* to invoker@localhost;
-connect inv,localhost,invoker;
+connect inv,localhost,invoker,,"*NO-ONE*";
 show create view mysqltest3.v3;
 show create view mysqltest3.v3is;
 show create view mysqltest3.v3ps;
@@ -48,7 +48,7 @@ disconnect inv;
 connection default;
 
 grant lock tables on mysqltest2.* to invoker@localhost;
-connect inv,localhost,invoker;
+connect inv,localhost,invoker,,"*NO-ONE*";
 error ER_VIEW_INVALID;
 lock table mysqltest3.v3 write;
 error ER_VIEW_INVALID;
@@ -57,7 +57,7 @@ disconnect inv;
 connection default;
 
 grant lock tables on mysqltest1.* to definer@localhost;
-connect inv,localhost,invoker;
+connect inv,localhost,invoker,,"*NO-ONE*";
 lock table mysqltest3.v3 write; select * from mysqltest3.v3;
 error ER_VIEW_INVALID;
 lock table mysqltest3.v3i write;
@@ -65,7 +65,7 @@ disconnect inv;
 connection default;
 
 grant lock tables on mysqltest1.* to invoker@localhost;
-connect inv,localhost,invoker;
+connect inv,localhost,invoker,,"*NO-ONE*";
 lock table mysqltest3.v3i write; select * from mysqltest3.v3i;
 disconnect inv;
 connection default;

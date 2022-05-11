@@ -37,7 +37,7 @@ t1	CREATE TABLE `t1` (
 drop table t1;
 create user foo@localhost;
 grant execute on mysql.* to foo@localhost;
-connect  foo, localhost, foo;
+connect  foo, localhost, foo,,mysql;
 call mysql.AddGeometryColumn('', 'mysql', 'proc', 'c', 10);
 ERROR 42000: ALTER command denied to user 'foo'@'localhost' for table 'proc'
 disconnect foo;

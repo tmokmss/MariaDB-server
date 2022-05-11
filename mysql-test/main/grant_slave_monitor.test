@@ -82,7 +82,7 @@ DROP USER user1@localhost;
 CREATE USER user1@localhost IDENTIFIED BY '';
 GRANT SUPER ON *.* TO user1@localhost;
 
---connect(con1,localhost,user1,,)
+--connect(con1,localhost,user1,,"*NO-ONE*")
 --disable_result_log
 SHOW SLAVE STATUS;
 --enable_result_log

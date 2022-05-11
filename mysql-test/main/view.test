@@ -6343,9 +6343,8 @@ create table t (i int);
 create user foo@localhost;
 grant all on test_db.* to foo@localhost;
 
---connect (con1,localhost,foo,,)
+--connect (con1,localhost,foo,,test_db)
 
-use test_db;
 create view v as select * from (select i from t group by i) sq;
 select * from v;
 
@@ -6378,8 +6377,7 @@ CREATE DEFINER=`procView`@`%` VIEW `procViewSimple` AS (
   group by `innerQuery`.`id`
 );
 
---connect (con1,localhost,procView,,)
-use bugTest;
+--connect (con1,localhost,procView,,bugTest)
 
 prepare stmt from "SELECT * FROM procViewSimple";
 execute stmt;

@@ -15,7 +15,7 @@ drop table t1;
 
 create user foo@localhost;
 grant execute on mysql.* to foo@localhost;
-connect (foo, localhost, foo);
+connect (foo, localhost, foo,,mysql);
 --error ER_TABLEACCESS_DENIED_ERROR
 call mysql.AddGeometryColumn('', 'mysql', 'proc', 'c', 10);
 disconnect foo;

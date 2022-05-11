@@ -20,7 +20,7 @@ DROP USER user1@localhost;
 # Test that "SET master_verify_checksum" is allowed with REPLICATION MASTER ADMIN
 CREATE USER user1@localhost;
 GRANT REPLICATION MASTER ADMIN ON *.* TO user1@localhost;
-connect user1,localhost,user1,,;
+connect user1,localhost,user1,,"*NO-ONE*";
 connection user1;
 SET GLOBAL master_verify_checksum=1;
 SET master_verify_checksum=1;
@@ -33,7 +33,7 @@ DROP USER user1@localhost;
 # Test that "SET master_verify_checksum" is allowed with SUPER
 CREATE USER user1@localhost;
 GRANT SUPER ON *.* TO user1@localhost;
-connect user1,localhost,user1,,;
+connect user1,localhost,user1,,"*NO-ONE*";
 connection user1;
 SET GLOBAL master_verify_checksum=1;
 SET master_verify_checksum=1;

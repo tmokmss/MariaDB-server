@@ -56,7 +56,7 @@ SET GLOBAL secure_auth = OFF;
 #
 CREATE USER 'testUser'@'localhost' IDENTIFIED BY 'newpass';
 
-connect (con_user1,localhost,testUser,newpass,);
+connect (con_user1,localhost,testUser,newpass,"*NO-ONE*");
 
 connection default;
 
@@ -65,7 +65,7 @@ connection default;
 #
 SET PASSWORD FOR 'testUser'@'localhost' = OLD_PASSWORD('newpass');
 
-connect (con_user2,localhost,testUser,newpass,);
+connect (con_user2,localhost,testUser,newpass,"*NO-ONE*");
 
 connection default;
 
@@ -80,7 +80,7 @@ SET GLOBAL secure_auth = ON;
 #
 SET PASSWORD FOR 'testUser'@'localhost' = PASSWORD('newpass');
 
-connect (con_user3,localhost,testUser,newpass,);
+connect (con_user3,localhost,testUser,newpass,"*NO-ONE*");
 connection default;
 
 #
@@ -101,7 +101,7 @@ connection default;
 #
 SET PASSWORD FOR 'testUser'@'localhost' = PASSWORD('newpass');
 
-connect (con_user4,localhost,testUser,newpass,);
+connect (con_user4,localhost,testUser,newpass,"*NO-ONE*");
 
 connection default;
 

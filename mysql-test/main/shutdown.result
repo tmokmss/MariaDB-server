@@ -1,5 +1,5 @@
 create user user1@localhost;
-connect  c1,localhost,user1,,;
+connect  c1,localhost,user1,,"*NO-ONE*";
 shutdown;
 ERROR 42000: Access denied; you need (at least one of) the SHUTDOWN privilege(s) for this operation
 connection default;

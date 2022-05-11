@@ -9,7 +9,7 @@
 CREATE USER user1@localhost;
 GRANT ALL PRIVILEGES ON *.* TO user1@localhost;
 REVOKE READ_ONLY ADMIN, SUPER ON *.* FROM user1@localhost;
---connect(user1,localhost,user1,,)
+--connect(user1,localhost,user1,,"*NO-ONE*")
 --connection user1
 --error ER_SPECIFIC_ACCESS_DENIED_ERROR
 SET GLOBAL read_only=0;
@@ -25,7 +25,7 @@ DROP USER user1@localhost;
 
 CREATE USER user1@localhost;
 GRANT READ_ONLY ADMIN ON *.* TO user1@localhost;
---connect(user1,localhost,user1,,)
+--connect(user1,localhost,user1,,"*NO-ONE*")
 --connection user1
 SET GLOBAL read_only=0;
 --error ER_GLOBAL_VARIABLE
@@ -40,7 +40,7 @@ DROP USER user1@localhost;
 
 CREATE USER user1@localhost;
 GRANT SUPER ON *.* TO user1@localhost;
---connect(user1,localhost,user1,,)
+--connect(user1,localhost,user1,,"*NO-ONE*")
 --connection user1
 SET GLOBAL read_only=0;
 --error ER_GLOBAL_VARIABLE

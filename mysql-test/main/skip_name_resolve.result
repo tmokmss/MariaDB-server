@@ -50,7 +50,7 @@ create role r1;
 create role r2;
 grant r2 to r1;
 grant r1 to u1@`%`;
-connect u1,127.0.0.1,u1,,,$MASTER_MYPORT;
+connect u1,127.0.0.1,u1,,"*NO-ONE*",$MASTER_MYPORT;
 set role r2;
 ERROR OP000: User `u1`@`%` has not been granted role `r2`
 disconnect u1;

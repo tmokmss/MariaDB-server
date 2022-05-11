@@ -7,7 +7,7 @@ create user c;
 grant select on mysql.* to c;
 create role r1;
 grant r1 to c;
-connect (c,localhost,c,,,,,);
+connect (c,localhost,c,,"*NO-ONE*",,,);
 select user(), current_user();
 --error ER_TABLEACCESS_DENIED_ERROR
 select user from mysql.user group by user;

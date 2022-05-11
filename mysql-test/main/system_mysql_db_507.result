@@ -173,14 +173,14 @@ connect(localhost,user1,,test,MYSQL_PORT,MYSQL_SOCK);
 connect con1,localhost,user1;
 ERROR HY000: Access denied, this account is locked
 flush privileges;
-connect(localhost,user1,,test,MYSQL_PORT,MYSQL_SOCK);
-connect con1,localhost,user1;
+connect(localhost,user1,,,MYSQL_PORT,MYSQL_SOCK);
+connect con1,localhost,user1,,"*NO-ONE*";
 ERROR HY000: Access denied, this account is locked
 show create user user1@localhost;
 CREATE USER for user1@localhost
 CREATE USER `user1`@`localhost` ACCOUNT LOCK
 alter user user1@localhost account unlock;
-connect con1,localhost,user1;
+connect con1,localhost,user1,,"*NO-ONE*";
 disconnect con1;
 connection default;
 show create user user1@localhost;

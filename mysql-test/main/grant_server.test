@@ -36,7 +36,7 @@ CREATE USER user1@localhost IDENTIFIED BY '';
 GRANT FEDERATED ADMIN ON *.* TO user1@localhost;
 SHOW GRANTS FOR user1@localhost;
 
-connect (con1,localhost,user1,,);
+connect (con1,localhost,user1,,"*NO-ONE*");
 connection con1;
 CREATE SERVER IF NOT EXISTS server_1
   FOREIGN DATA WRAPPER mysql
@@ -57,7 +57,7 @@ CREATE USER user1@localhost IDENTIFIED BY '';
 GRANT SUPER ON *.* TO user1@localhost;
 SHOW GRANTS FOR user1@localhost;
 
-connect (con1,localhost,user1,,);
+connect (con1,localhost,user1,,"*NO-ONE*");
 connection con1;
 CREATE SERVER IF NOT EXISTS server_1
   FOREIGN DATA WRAPPER mysql

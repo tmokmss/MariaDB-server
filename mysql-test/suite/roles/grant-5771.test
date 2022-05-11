@@ -13,7 +13,7 @@ grant all on mysqltest2.* to r2;
 grant r1 to r2;
 grant r2 to foo@localhost;
 
---connect (foo,localhost,foo,,)
+--connect (foo,localhost,foo,,"*NO-ONE*")
 select current_user;
 --error ER_DBACCESS_DENIED_ERROR
 show tables in mysqltest1;

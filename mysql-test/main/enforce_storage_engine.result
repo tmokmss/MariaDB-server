@@ -69,7 +69,7 @@ ERROR 42000: Unknown storage engine 'FooBar'
 select @@session.enforce_storage_engine;
 @@session.enforce_storage_engine
 MyISAM
-connect  con1,localhost,user_1,,;
+connect  con1,localhost,user_1,,"*NO-ONE*";
 connection con1;
 SET SESSION enforce_storage_engine=MyISAM;
 ERROR 42000: Access denied; you need (at least one of) the SUPER privilege(s) for this operation

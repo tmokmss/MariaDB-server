@@ -24,7 +24,7 @@ GRANT DELETE ON mysql.* TO mysqltest_1@localhost;
 REVOKE DELETE ON mysql.* FROM mysqltest_1@localhost;
 FLUSH PRIVILEGES;
 
-connect (user_a, localhost, mysqltest_1,,);
+connect (user_a, localhost, mysqltest_1,,"*NO-ONE*");
 connection user_a;
 SELECT CURRENT_USER;
 

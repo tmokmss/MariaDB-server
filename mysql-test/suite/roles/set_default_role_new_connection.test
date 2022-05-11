@@ -5,7 +5,7 @@ create role test_role;
 grant select on *.* to test_role;
 grant test_role to test_user@localhost;
 
---connect (c1, localhost, test_user,,)
+--connect (c1, localhost, test_user,,"*NO-ONE*")
 show grants;
 --error ER_TABLEACCESS_DENIED_ERROR
 select user, host, default_role from mysql.user where user = 'test_user';
@@ -27,7 +27,7 @@ disconnect c1;
 connection default;
 select user, host, default_role from mysql.user where user = 'test_user';
 
---connect (c1, localhost, test_user,,)
+--connect (c1, localhost, test_user,,"*NO-ONE*")
 show grants;
 --error ER_TABLEACCESS_DENIED_ERROR
 select user, host, default_role from mysql.user where user = 'test_user';

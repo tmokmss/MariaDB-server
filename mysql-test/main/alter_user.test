@@ -25,7 +25,7 @@ SET GLOBAL read_only=1;
 grant create user on *.* to foo;
 
 --echo # Currently no READ_ONLY ADMIN privileges.
-connect (a, localhost, foo);
+connect (a, localhost, foo,,"*NO-ONE*");
 select @@global.read_only;
 
 --error ER_OPTION_PREVENTS_STATEMENT
@@ -36,7 +36,7 @@ connection default;
 grant READ_ONLY ADMIN on *.* to foo;
 
 --echo # We now have READ_ONLY ADMIN privilege. We should be able to run alter user.
-connect (b, localhost, foo);
+connect (b, localhost, foo,,"*NO-ONE*");
 alter user foo;
 
 connection default;
@@ -110,7 +110,7 @@ drop user foo;
 --echo # Bug #29882299: ALTER USER ... IDENTIFIED WITH ... BY ... SHOULD BE A PRIVILEGED OPERATION
 --echo #
 create user foo@localhost;
---connect x,localhost,foo
+--connect x,localhost,foo,,"*NO-ONE*"
 --error ER_SPECIFIC_ACCESS_DENIED_ERROR
 alter user current_user identified with 'something';
 --connection default

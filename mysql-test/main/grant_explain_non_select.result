@@ -6,9 +6,8 @@ CREATE TABLE privtest_db.t2 (a INT);
 INSERT INTO privtest_db.t2 VALUES (1), (2), (3);
 GRANT USAGE ON *.* TO 'privtest'@'localhost';
 GRANT SELECT ON privtest_db.t2 TO 'privtest'@'localhost';
-connect con1,localhost,privtest,,;
+connect con1,localhost,privtest,,privtest_db;
 connection con1;
-USE privtest_db;
 EXPLAIN INSERT INTO t1 VALUES (10);
 ERROR 42000: INSERT command denied to user 'privtest'@'localhost' for table 't1'
 INSERT INTO t1 VALUES (10);

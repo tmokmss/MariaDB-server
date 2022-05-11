@@ -13,7 +13,7 @@ create view v1 as select * from t1 where i > 1;
 CREATE USER u1@localhost;
 grant ALL on db.v1 to u1@localhost;
 
---connect (con1,localhost,u1,,)
+--connect (con1,localhost,u1,,"*NO-ONE*")
 
 --error ER_TABLEACCESS_DENIED_ERROR
 select * from db.t1;

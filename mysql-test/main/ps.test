@@ -5068,7 +5068,7 @@ CREATE USER user1@localhost PASSWORD EXPIRE;
 SET @disconnect_on_expired_password_save=@@global.disconnect_on_expired_password;
 SET GLOBAL disconnect_on_expired_password=OFF;
 
-connect(con1,localhost,user1);
+connect(con1,localhost,user1,,"*NO-ONE*");
 connection con1;
 --echo # Check that no regular statement like SELECT can be prepared
 --echo # by a user with an expired password

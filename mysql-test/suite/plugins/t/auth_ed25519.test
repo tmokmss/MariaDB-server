@@ -44,8 +44,8 @@ show create user test1@localhost;
 
 replace_result $MASTER_MYPORT PORT $MASTER_MYSOCK SOCKET;
 error ER_ACCESS_DENIED_ERROR;
-connect con1, localhost, test1, public;
-connect con1, localhost, test1, secret;
+connect con1, localhost, test1, public, "*NO-ONE*";
+connect con1, localhost, test1, secret, "*NO-ONE*";
 select current_user();
 disconnect con1;
 connection default;

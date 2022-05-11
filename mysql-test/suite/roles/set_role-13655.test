@@ -34,7 +34,7 @@ grant all on t.* to admin;
 create user foo;
 grant admin to foo;
 
-connect (foo,localhost,foo,,,,,);
+connect (foo,localhost,foo,,"*NO-ONE*",,,);
 --error ER_DBACCESS_DENIED_ERROR
 create database t;
 set role admin;

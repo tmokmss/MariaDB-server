@@ -4,7 +4,7 @@
 #
 create user user1@localhost;
 
-connect (c1,localhost,user1,,);
+connect (c1,localhost,user1,,"*NO-ONE*");
 
 --error ER_SPECIFIC_ACCESS_DENIED_ERROR
 shutdown;

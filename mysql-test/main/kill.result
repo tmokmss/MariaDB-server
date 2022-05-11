@@ -385,7 +385,7 @@ ERROR HY000: Unknown query id: 0
 CREATE USER u1@localhost;
 SELECT SLEEP(1000);
 connection con1;
-connect con5, localhost, u1,,;
+connect con5, localhost, u1,,"*NO-ONE*";
 KILL QUERY ID ID;
 ERROR HY000: You are not owner of query ID
 connection con1;

@@ -26,7 +26,7 @@ DROP USER user1@localhost;
 
 CREATE USER user1@localhost;
 GRANT BINLOG ADMIN ON *.* TO user1@localhost;
---connect(user1,localhost,user1,,)
+--connect(user1,localhost,user1,,"*NO-ONE*")
 --connection user1
 SET sql_log_bin=1;
 --error ER_INCORRECT_GLOBAL_LOCAL_VAR
@@ -40,7 +40,7 @@ DROP USER user1@localhost;
 
 CREATE USER user1@localhost;
 GRANT SUPER ON *.* TO user1@localhost;
---connect(user1,localhost,user1,,)
+--connect(user1,localhost,user1,,"*NO-ONE*")
 --connection user1
 SET sql_log_bin=1;
 --error ER_INCORRECT_GLOBAL_LOCAL_VAR

@@ -5,7 +5,7 @@ CREATE USER user1@localhost;
 CREATE DATABASE db1;
 GRANT ALL PRIVILEGES ON db1.* TO user1@localhost;
 CREATE TABLE db1.t1(a INT);
-connect  con1,localhost,user1,,;
+connect  con1,localhost,user1,,"*NO-ONE*";
 connection con1;
 SELECT CURRENT_USER();
 CURRENT_USER()

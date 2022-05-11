@@ -215,8 +215,8 @@ CREATE TABLE federated.t1 (
 select * from federated.t1;
 
 connect (conn_select,127.0.0.1,guest_select,,federated,$MASTER_MYPORT);
-connect (conn_usage,127.0.0.1,guest_usage,,,$MASTER_MYPORT);
-connect (conn_super,127.0.0.1,guest_super,,,$MASTER_MYPORT);
+connect (conn_usage,127.0.0.1,guest_usage,,"*NO-ONE*",$MASTER_MYPORT);
+connect (conn_super,127.0.0.1,guest_super,,"*NO-ONE*",$MASTER_MYPORT);
 
 connection conn_select;
 --error ER_SPECIFIC_ACCESS_DENIED_ERROR

@@ -7,7 +7,7 @@ alter user user1@localhost account lock;
 alter user user1@localhost account unlock;
 create user user3@localhost account lock;
 drop user user3@localhost;
-connect con1,localhost,user1;
+connect con1,localhost,user1,,"*NO-ONE*";
 connection con1;
 alter user user2@localhost account lock;
 ERROR 42000: Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
@@ -21,7 +21,7 @@ alter user user1@localhost account lock;
 connect(localhost,user1,,test,MYSQL_PORT,MYSQL_SOCK);
 connect con1,localhost,user1;
 ERROR HY000: Access denied, this account is locked
-connect con2,localhost,user2;
+connect con2,localhost,user2,,"*NO-ONE*";
 disconnect con2;
 connection default;
 alter user user1@localhost account unlock;
@@ -101,7 +101,7 @@ drop user newuser@localhost;
 # Users should be able to lock themselves
 #
 grant CREATE USER on *.* to user1@localhost;
-connect con1,localhost,user1;
+connect con1,localhost,user1,,"*NO-ONE*";
 connection con1;
 alter user user1@localhost account lock;
 disconnect con1;
@@ -115,7 +115,7 @@ alter user user1@localhost account unlock;
 # had been established before the accounts were locked
 #
 grant CREATE USER on *.* to user1@localhost;
-connect con1,localhost,user1;
+connect con1,localhost,user1,,"*NO-ONE*";
 alter user user1@localhost account lock;
 connection con1;
 alter user user1@localhost account unlock;

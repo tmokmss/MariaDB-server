@@ -1447,7 +1447,7 @@ CREATE TABLE t1 (id INT);
 CREATE USER nonpriv;
 USE test;
 
-connect (nonpriv_con, localhost, nonpriv,,);
+connect (nonpriv_con, localhost, nonpriv,,"*NO-ONE*");
 connection nonpriv_con;
 --echo # connected as nonpriv
 --echo # Should return 0
@@ -1493,7 +1493,7 @@ DROP TABLE ubig;
 #
 select 1 from information_schema.tables where table_schema=repeat('a', 2000);
 grant usage on *.* to mysqltest_1@localhost;
-connect (con1, localhost, mysqltest_1,,);
+connect (con1, localhost, mysqltest_1,,"*NO-ONE*");
 connection con1;
 select 1 from information_schema.tables where table_schema=repeat('a', 2000);
 connection default;

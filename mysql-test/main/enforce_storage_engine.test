@@ -46,7 +46,7 @@ select @@session.enforce_storage_engine;
 
 --source include/add_anonymous_users.inc
 
-connect (con1,localhost,user_1,,);
+connect (con1,localhost,user_1,,"*NO-ONE*");
 connection con1;
 --error 1227
 SET SESSION enforce_storage_engine=MyISAM;

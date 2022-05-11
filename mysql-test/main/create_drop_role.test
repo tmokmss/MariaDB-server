@@ -31,7 +31,7 @@ REVOKE SHOW DATABASES ON *.* FROM 'u1'@'localhost';
 GRANT SHOW DATABASES ON *.* TO role_1;
 GRANT role_1 TO u1@localhost;
 
-connect (user_a, localhost, u1,,);
+connect (user_a, localhost, u1,,"*NO-ONE*");
 connection user_a;
 
 SELECT CURRENT_USER;

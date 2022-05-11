@@ -144,13 +144,13 @@ let $saved_max_connections = `SELECT @@global.max_connections`;
 SET GLOBAL max_connections = 10;
 SET GLOBAL event_scheduler = ON;
 
-connect (tmp_con1,localhost,mysqltest_u1,,);
-connect (tmp_con2,localhost,mysqltest_u1,,);
-connect (tmp_con3,localhost,mysqltest_u1,,);
-connect (tmp_con4,localhost,mysqltest_u1,,);
-connect (tmp_con5,localhost,mysqltest_u1,,);
-connect (tmp_con6,localhost,mysqltest_u1,,);
-connect (tmp_con7,localhost,mysqltest_u1,,);
+connect (tmp_con1,localhost,mysqltest_u1,,"*NO-ONE*");
+connect (tmp_con2,localhost,mysqltest_u1,,"*NO-ONE*");
+connect (tmp_con3,localhost,mysqltest_u1,,"*NO-ONE*");
+connect (tmp_con4,localhost,mysqltest_u1,,"*NO-ONE*");
+connect (tmp_con5,localhost,mysqltest_u1,,"*NO-ONE*");
+connect (tmp_con6,localhost,mysqltest_u1,,"*NO-ONE*");
+connect (tmp_con7,localhost,mysqltest_u1,,"*NO-ONE*");
 connection default;
 
 --echo
@@ -372,15 +372,15 @@ CREATE USER mysqltest_up2 IDENTIFIED VIA mysql_old_password using '09301740536db
 
 --replace_result $MASTER_MYSOCK MASTER_SOCKET $MASTER_MYPORT MASTER_PORT
 --error ER_ACCESS_DENIED_ERROR
-connect(pcon1,localhost,mysqltest_up1,foo,,$MASTER_MYPORT,);
-connect(pcon2,localhost,mysqltest_up1,bar,,$MASTER_MYPORT,);
+connect(pcon1,localhost,mysqltest_up1,foo,"*NO-ONE*",$MASTER_MYPORT,);
+connect(pcon2,localhost,mysqltest_up1,bar,"*NO-ONE*",$MASTER_MYPORT,);
 select user(), current_user();
 disconnect pcon2;
 
 --replace_result $MASTER_MYSOCK MASTER_SOCKET $MASTER_MYPORT MASTER_PORT
 --error ER_ACCESS_DENIED_ERROR
-connect(pcon3,localhost,mysqltest_up2,newpw,,$MASTER_MYPORT,);
-connect(pcon4,localhost,mysqltest_up2,oldpw,,$MASTER_MYPORT,);
+connect(pcon3,localhost,mysqltest_up2,newpw,"*NO-ONE*",$MASTER_MYPORT,);
+connect(pcon4,localhost,mysqltest_up2,oldpw,"*NO-ONE*",$MASTER_MYPORT,);
 select user(), current_user();
 disconnect pcon4;
 
@@ -411,11 +411,11 @@ select user, password, plugin, authentication_string from mysql.user
                   where user like 'mysqltest_up_';
 flush privileges;
 
-connect(pcon6,localhost,mysqltest_up1,bar,,$MASTER_MYPORT,);
+connect(pcon6,localhost,mysqltest_up1,bar,"*NO-ONE*",$MASTER_MYPORT,);
 select user(), current_user();
 disconnect pcon6;
 
-connect(pcon7,localhost,mysqltest_up2,oldpw,,$MASTER_MYPORT,);
+connect(pcon7,localhost,mysqltest_up2,oldpw,"*NO-ONE*",$MASTER_MYPORT,);
 select user(), current_user();
 disconnect pcon7;
 connection default;

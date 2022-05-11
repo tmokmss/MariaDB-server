@@ -191,13 +191,13 @@ GRANT USAGE ON *.* TO mysqltest_u1@localhost;
 
 SET GLOBAL max_connections = 10;
 SET GLOBAL event_scheduler = ON;
-connect  tmp_con1,localhost,mysqltest_u1,,;
-connect  tmp_con2,localhost,mysqltest_u1,,;
-connect  tmp_con3,localhost,mysqltest_u1,,;
-connect  tmp_con4,localhost,mysqltest_u1,,;
-connect  tmp_con5,localhost,mysqltest_u1,,;
-connect  tmp_con6,localhost,mysqltest_u1,,;
-connect  tmp_con7,localhost,mysqltest_u1,,;
+connect  tmp_con1,localhost,mysqltest_u1,,"*NO-ONE*";
+connect  tmp_con2,localhost,mysqltest_u1,,"*NO-ONE*";
+connect  tmp_con3,localhost,mysqltest_u1,,"*NO-ONE*";
+connect  tmp_con4,localhost,mysqltest_u1,,"*NO-ONE*";
+connect  tmp_con5,localhost,mysqltest_u1,,"*NO-ONE*";
+connect  tmp_con6,localhost,mysqltest_u1,,"*NO-ONE*";
+connect  tmp_con7,localhost,mysqltest_u1,,"*NO-ONE*";
 connection default;
 
 # -- Waiting for Event Scheduler to start...
@@ -342,18 +342,18 @@ disconnect extracon2;
 connection default;
 CREATE USER mysqltest_up1 IDENTIFIED VIA mysql_native_password using '*E8D46CE25265E545D225A8A6F1BAF642FEBEE5CB';
 CREATE USER mysqltest_up2 IDENTIFIED VIA mysql_old_password using '09301740536db389';
-connect(localhost,mysqltest_up1,foo,test,MASTER_PORT,MASTER_SOCKET);
-connect pcon1,localhost,mysqltest_up1,foo,,$MASTER_MYPORT,;
+connect(localhost,mysqltest_up1,foo,,MASTER_PORT,MASTER_SOCKET);
+connect pcon1,localhost,mysqltest_up1,foo,"*NO-ONE*",$MASTER_MYPORT,;
 ERROR 28000: Access denied for user 'mysqltest_up1'@'localhost' (using password: YES)
-connect pcon2,localhost,mysqltest_up1,bar,,$MASTER_MYPORT,;
+connect pcon2,localhost,mysqltest_up1,bar,"*NO-ONE*",$MASTER_MYPORT,;
 select user(), current_user();
 user()	current_user()
 mysqltest_up1@localhost	mysqltest_up1@%
 disconnect pcon2;
-connect(localhost,mysqltest_up2,newpw,test,MASTER_PORT,MASTER_SOCKET);
-connect pcon3,localhost,mysqltest_up2,newpw,,$MASTER_MYPORT,;
+connect(localhost,mysqltest_up2,newpw,,MASTER_PORT,MASTER_SOCKET);
+connect pcon3,localhost,mysqltest_up2,newpw,"*NO-ONE*",$MASTER_MYPORT,;
 ERROR 28000: Access denied for user 'mysqltest_up2'@'localhost' (using password: YES)
-connect pcon4,localhost,mysqltest_up2,oldpw,,$MASTER_MYPORT,;
+connect pcon4,localhost,mysqltest_up2,oldpw,"*NO-ONE*",$MASTER_MYPORT,;
 select user(), current_user();
 user()	current_user()
 mysqltest_up2@localhost	mysqltest_up2@%
@@ -374,12 +374,12 @@ user	password	plugin	authentication_string
 mysqltest_up1	*E8D46CE25265E545D225A8A6F1BAF642FEBEE5CB	mysql_native_password	*E8D46CE25265E545D225A8A6F1BAF642FEBEE5CB
 mysqltest_up2	09301740536db389	mysql_old_password	09301740536db389
 flush privileges;
-connect pcon6,localhost,mysqltest_up1,bar,,$MASTER_MYPORT,;
+connect pcon6,localhost,mysqltest_up1,bar,"*NO-ONE*",$MASTER_MYPORT,;
 select user(), current_user();
 user()	current_user()
 mysqltest_up1@localhost	mysqltest_up1@%
 disconnect pcon6;
-connect pcon7,localhost,mysqltest_up2,oldpw,,$MASTER_MYPORT,;
+connect pcon7,localhost,mysqltest_up2,oldpw,"*NO-ONE*",$MASTER_MYPORT,;
 select user(), current_user();
 user()	current_user()
 mysqltest_up2@localhost	mysqltest_up2@%

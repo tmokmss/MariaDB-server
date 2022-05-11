@@ -102,7 +102,7 @@ READ_ONLY	YES
 COMMAND_LINE_ARGUMENT	REQUIRED
 GLOBAL_VALUE_PATH	var/my.cnf
 create user foo@localhost;
-connect foo,localhost,foo;
+connect foo,localhost,foo,,"*NO-ONE*";
 select global_value_path from information_schema.system_variables where variable_name='plugin_maturity';
 global_value_path	NULL
 connection default;

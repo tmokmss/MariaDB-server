@@ -64,7 +64,7 @@ create role r2;
 grant r2 to r1;
 grant r1 to u1@`%`;
 
-connect u1,127.0.0.1,u1,,,$MASTER_MYPORT;
+connect u1,127.0.0.1,u1,,"*NO-ONE*",$MASTER_MYPORT;
 error ER_INVALID_ROLE;
 set role r2;
 disconnect u1;

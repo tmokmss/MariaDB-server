@@ -33,8 +33,8 @@ CREATE USER foo@localhost;
 GRANT SELECT ON *.* TO foo@localhost;
 CREATE USER bar@localhost;
 GRANT PROCESS, CONNECTION ADMIN ON *.* TO bar@localhost;
-connect  foo,localhost,foo,,;
-connect  bar,localhost,bar,,;
+connect  foo,localhost,foo,,"*NO-ONE*";
+connect  bar,localhost,bar,,"*NO-ONE*";
 SELECT user FROM information_schema.processlist ORDER BY user;
 user
 bar
@@ -53,8 +53,8 @@ CREATE USER foo@localhost;
 GRANT SELECT ON *.* TO foo@localhost;
 CREATE USER bar@localhost;
 GRANT PROCESS, SUPER ON *.* TO bar@localhost;
-connect  foo,localhost,foo,,;
-connect  bar,localhost,bar,,;
+connect  foo,localhost,foo,,"*NO-ONE*";
+connect  bar,localhost,bar,,"*NO-ONE*";
 SELECT user FROM information_schema.processlist ORDER BY user;
 user
 bar

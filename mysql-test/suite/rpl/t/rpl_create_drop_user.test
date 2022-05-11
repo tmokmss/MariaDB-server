@@ -2,14 +2,14 @@
 
 connection master;
 CREATE USER u1@localhost IDENTIFIED BY 'abcdefghijk';
-connect (user_a, localhost, u1,'abcdefghijk',);
+connect (user_a, localhost, u1,'abcdefghijk',"*NO-ONE*");
 connection user_a;
 SELECT CURRENT_USER;
 disconnect user_a;
 
 connection master;
 CREATE USER IF NOT EXISTS u2@localhost;
-connect (user_a, localhost, u2,,);
+connect (user_a, localhost, u2,,"*NO-ONE*");
 connection user_a;
 SELECT CURRENT_USER;
 disconnect user_a;
@@ -23,7 +23,7 @@ SELECT user,password,plugin,authentication_string FROM mysql.user WHERE user LIK
 
 connection master;
 CREATE OR REPLACE USER u1@localhost IDENTIFIED BY 'abcdefghijk2';
-connect (user_a, localhost, u1,'abcdefghijk2',);
+connect (user_a, localhost, u1,'abcdefghijk2',"*NO-ONE*");
 connection user_a;
 SELECT CURRENT_USER;
 disconnect user_a;

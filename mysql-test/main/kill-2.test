@@ -15,7 +15,7 @@
 
 create user foo@'127.0.0.1';
 
---connect (con1,127.0.0.1,foo,,)
+--connect (con1,127.0.0.1,foo,,"*NO-ONE*")
 
 --connection default
 select user from information_schema.processlist;

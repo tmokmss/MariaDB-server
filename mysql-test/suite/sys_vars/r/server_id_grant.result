@@ -6,7 +6,7 @@ SET @global=@@global.server_id;
 CREATE USER user1@localhost;
 GRANT ALL PRIVILEGES ON *.* TO user1@localhost;
 REVOKE REPLICATION MASTER ADMIN, SUPER ON *.* FROM user1@localhost;
-connect user1,localhost,user1,,;
+connect user1,localhost,user1,,"*NO-ONE*";
 connection user1;
 SET GLOBAL server_id=1;
 ERROR 42000: Access denied; you need (at least one of) the SUPER, REPLICATION MASTER ADMIN privilege(s) for this operation
@@ -16,7 +16,7 @@ DROP USER user1@localhost;
 # Test that "SET GLOBAL server_id" is allowed with REPLICATION MASTER ADMIN
 CREATE USER user1@localhost;
 GRANT REPLICATION MASTER ADMIN ON *.* TO user1@localhost;
-connect user1,localhost,user1,,;
+connect user1,localhost,user1,,"*NO-ONE*";
 connection user1;
 SET GLOBAL server_id=1;
 disconnect user1;
@@ -25,7 +25,7 @@ DROP USER user1@localhost;
 # Test that "SET GLOBAL server_id" is allowed with SUPER
 CREATE USER user1@localhost;
 GRANT SUPER ON *.* TO user1@localhost;
-connect user1,localhost,user1,,;
+connect user1,localhost,user1,,"*NO-ONE*";
 connection user1;
 SET GLOBAL server_id=1;
 disconnect user1;
@@ -37,7 +37,7 @@ SET @session=@@session.server_id;
 CREATE USER user1@localhost;
 GRANT ALL PRIVILEGES ON *.* TO user1@localhost;
 REVOKE BINLOG REPLAY, SUPER ON *.* FROM user1@localhost;
-connect user1,localhost,user1,,;
+connect user1,localhost,user1,,"*NO-ONE*";
 connection user1;
 SET server_id=1;
 ERROR 42000: Access denied; you need (at least one of) the SUPER, BINLOG REPLAY privilege(s) for this operation
@@ -49,7 +49,7 @@ DROP USER user1@localhost;
 # Test that "SET server_id" is allowed with BINLOG REPLAY
 CREATE USER user1@localhost;
 GRANT BINLOG REPLAY ON *.* TO user1@localhost;
-connect user1,localhost,user1,,;
+connect user1,localhost,user1,,"*NO-ONE*";
 connection user1;
 SET server_id=1;
 SET SESSION server_id=1;
@@ -59,7 +59,7 @@ DROP USER user1@localhost;
 # Test that "SET server_id" is allowed with SUPER
 CREATE USER user1@localhost;
 GRANT SUPER ON *.* TO user1@localhost;
-connect user1,localhost,user1,,;
+connect user1,localhost,user1,,"*NO-ONE*";
 connection user1;
 SET server_id=1;
 SET SESSION server_id=1;

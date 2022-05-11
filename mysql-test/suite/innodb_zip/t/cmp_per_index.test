@@ -68,7 +68,7 @@ SET GLOBAL innodb_read_only_compressed=@save_innodb_read_only_compressed;
 GRANT USAGE ON *.* TO 'tuser01'@'localhost' IDENTIFIED BY 'cDJvI9s_Uq';
 FLUSH PRIVILEGES;
 
--- connect (con1,localhost,tuser01,cDJvI9s_Uq,)
+-- connect (con1,localhost,tuser01,cDJvI9s_Uq,"*NO-ONE*")
 -- connection con1
 
 -- error ER_SPECIFIC_ACCESS_DENIED_ERROR

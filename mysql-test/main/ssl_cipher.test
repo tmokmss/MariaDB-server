@@ -14,16 +14,16 @@ create user ssl_user3@localhost require cipher 'AES256-SHA' AND SUBJECT '/C=FI/S
 create user ssl_user4@localhost require cipher 'AES256-SHA' AND SUBJECT '/C=FI/ST=Helsinki/L=Helsinki/O=MariaDB/CN=client' ISSUER '/CN=cacert/C=FI/ST=Helsinki/L=Helsinki/O=MariaDB';
 create user ssl_user5@localhost require cipher 'AES256-SHA' AND SUBJECT 'xxx';
 
-connect (con1,localhost,ssl_user1,,,,,SSL-CIPHER=AES256-SHA);
+connect (con1,localhost,ssl_user1,,"*NO-ONE*",,,SSL-CIPHER=AES256-SHA);
 --replace_result $MASTER_MYSOCK MASTER_SOCKET $MASTER_MYPORT MASTER_PORT
 --error ER_ACCESS_DENIED_ERROR
-connect (con2,localhost,ssl_user2,,,,,SSL-CIPHER=AES128-SHA);
-connect (con2,localhost,ssl_user2,,,,,SSL-CIPHER=AES256-SHA);
-connect (con3,localhost,ssl_user3,,,,,SSL-CIPHER=AES256-SHA);
-connect (con4,localhost,ssl_user4,,,,,SSL-CIPHER=AES256-SHA);
+connect (con2,localhost,ssl_user2,,"*NO-ONE*",,,SSL-CIPHER=AES128-SHA);
+connect (con2,localhost,ssl_user2,,"*NO-ONE*",,,SSL-CIPHER=AES256-SHA);
+connect (con3,localhost,ssl_user3,,"*NO-ONE*",,,SSL-CIPHER=AES256-SHA);
+connect (con4,localhost,ssl_user4,,"*NO-ONE*",,,SSL-CIPHER=AES256-SHA);
 --replace_result $MASTER_MYSOCK MASTER_SOCKET $MASTER_MYPORT MASTER_PORT
 --error ER_ACCESS_DENIED_ERROR
-connect (con5,localhost,ssl_user5,,,,,SSL-CIPHER=AES256-SHA);
+connect (con5,localhost,ssl_user5,,"*NO-ONE*",,,SSL-CIPHER=AES256-SHA);
 
 connection con1;
 SHOW STATUS LIKE 'Ssl_cipher';

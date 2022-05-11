@@ -47,9 +47,9 @@ GRANT USAGE on *.* TO test@localhost;
 #Should not make more then 2 connection#
 ########################################
 
-CONNECT (conn1,localhost,test,,);
+CONNECT (conn1,localhost,test,,"*NO-ONE*");
 
-CONNECT (conn2,localhost,test,,);
+CONNECT (conn2,localhost,test,,"*NO-ONE*");
 
 --disable_query_log
 --Error ER_TOO_MANY_USER_CONNECTIONS
@@ -71,8 +71,8 @@ let $wait_condition= SELECT count(id) <= 2
 
 connection default;
 Set Global max_user_connections=3;
-CONNECT (conn5,localhost,test,,);
-CONNECT (conn6,localhost,test,,);
+CONNECT (conn5,localhost,test,,"*NO-ONE*");
+CONNECT (conn6,localhost,test,,"*NO-ONE*");
 
 #
 # Cleanup

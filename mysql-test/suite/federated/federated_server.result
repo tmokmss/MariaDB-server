@@ -208,8 +208,8 @@ select * from federated.t1;
 id	name
 1	this is legitimate
 connect  conn_select,127.0.0.1,guest_select,,federated,$MASTER_MYPORT;
-connect  conn_usage,127.0.0.1,guest_usage,,,$MASTER_MYPORT;
-connect  conn_super,127.0.0.1,guest_super,,,$MASTER_MYPORT;
+connect  conn_usage,127.0.0.1,guest_usage,,"*NO-ONE*",$MASTER_MYPORT;
+connect  conn_super,127.0.0.1,guest_super,,"*NO-ONE*",$MASTER_MYPORT;
 connection conn_select;
 alter server s1 options (database 'db_bogus');
 ERROR 42000: Access denied; you need (at least one of) the SUPER, FEDERATED ADMIN privilege(s) for this operation

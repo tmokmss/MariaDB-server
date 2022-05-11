@@ -41,9 +41,9 @@ CREATE USER foo@localhost;
 GRANT SELECT ON *.* TO foo@localhost;
 CREATE USER bar@localhost;
 GRANT PROCESS, CONNECTION ADMIN ON *.* TO bar@localhost;
---connect (foo,localhost,foo,,)
+--connect (foo,localhost,foo,,"*NO-ONE*")
 let $id=`(SELECT id FROM INFORMATION_SCHEMA.PROCESSLIST WHERE user='foo')`;
---connect (bar,localhost,bar,,)
+--connect (bar,localhost,bar,,"*NO-ONE*")
 SELECT user FROM information_schema.processlist ORDER BY user;
 --replace_result $id ID
 --eval KILL $id
@@ -66,9 +66,9 @@ CREATE USER foo@localhost;
 GRANT SELECT ON *.* TO foo@localhost;
 CREATE USER bar@localhost;
 GRANT PROCESS, SUPER ON *.* TO bar@localhost;
---connect (foo,localhost,foo,,)
+--connect (foo,localhost,foo,,"*NO-ONE*")
 let $id=`(SELECT id FROM INFORMATION_SCHEMA.PROCESSLIST WHERE user='foo')`;
---connect (bar,localhost,bar,,)
+--connect (bar,localhost,bar,,"*NO-ONE*")
 SELECT user FROM information_schema.processlist ORDER BY user;
 --replace_result $id ID
 --eval KILL $id

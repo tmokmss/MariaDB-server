@@ -25,7 +25,7 @@ GRANT REPLICATION MASTER ADMIN ON *.* TO user1@localhost;
 SHOW GRANTS FOR user1@localhost;
 Grants for user1@localhost
 GRANT REPLICATION MASTER ADMIN ON *.* TO `user1`@`localhost`
-connect  con1,localhost,user1,,;
+connect  con1,localhost,user1,,"*NO-ONE*";
 connection con1;
 SHOW SLAVE HOSTS;
 Server_id	Host	Port	Master_id

@@ -2,7 +2,7 @@ include/master-slave.inc
 [connection master]
 connection master;
 CREATE USER u1@localhost IDENTIFIED BY 'abcdefghijk';
-connect  user_a, localhost, u1,'abcdefghijk',;
+connect  user_a, localhost, u1,'abcdefghijk',"*NO-ONE*";
 connection user_a;
 SELECT CURRENT_USER;
 CURRENT_USER
@@ -10,7 +10,7 @@ u1@localhost
 disconnect user_a;
 connection master;
 CREATE USER IF NOT EXISTS u2@localhost;
-connect  user_a, localhost, u2,,;
+connect  user_a, localhost, u2,,"*NO-ONE*";
 connection user_a;
 SELECT CURRENT_USER;
 CURRENT_USER
@@ -28,7 +28,7 @@ u1	*D9553C4CE316A9845CE49E30A2D7E3857AF966C4	mysql_native_password	*D9553C4CE316
 u2		mysql_native_password	
 connection master;
 CREATE OR REPLACE USER u1@localhost IDENTIFIED BY 'abcdefghijk2';
-connect  user_a, localhost, u1,'abcdefghijk2',;
+connect  user_a, localhost, u1,'abcdefghijk2',"*NO-ONE*";
 connection user_a;
 SELECT CURRENT_USER;
 CURRENT_USER

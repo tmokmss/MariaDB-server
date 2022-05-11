@@ -13,6 +13,7 @@
 CREATE USER u;
 CREATE ROLE operations_cluster;
 GRANT operations_cluster TO u;
+GRANT select on test.* to u;
 CREATE DATABASE bob_live_sg;
 CREATE TABLE bob_live_sg.a (i INT(10));
 CREATE TABLE bob_live_sg.b (i INT(10));

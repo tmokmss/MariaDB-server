@@ -624,7 +624,7 @@ let $wait_condition= SELECT @id:=QUERY_ID FROM INFORMATION_SCHEMA.PROCESSLIST WH
 source include/wait_condition.inc;
 let $id= `SELECT @id`;
 
-connect(con5, localhost, u1,,);
+connect(con5, localhost, u1,,"*NO-ONE*");
 --replace_result $id ID
 --error ER_KILL_QUERY_DENIED_ERROR
 eval KILL QUERY ID $id;

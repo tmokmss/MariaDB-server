@@ -41,7 +41,7 @@ COMMIT;
 ALTER TABLE t DROP INDEX c;
 GRANT USAGE ON *.* TO 'tuser01'@'localhost' IDENTIFIED BY 'cDJvI9s_Uq';
 FLUSH PRIVILEGES;
-connect  con1,localhost,tuser01,cDJvI9s_Uq,;
+connect  con1,localhost,tuser01,cDJvI9s_Uq,"*NO-ONE*";
 connection con1;
 SELECT * FROM information_schema.innodb_cmp_per_index;
 ERROR 42000: Access denied; you need (at least one of) the PROCESS privilege(s) for this operation

@@ -5,8 +5,8 @@ Set Global max_user_connections=2;
 CREATE USER test@localhost;
 GRANT USAGE on *.* TO test@localhost;
 '#--------------------FN_DYNVARS_114_01-------------------------#'
-CONNECT  conn1,localhost,test,,;
-CONNECT  conn2,localhost,test,,;
+CONNECT  conn1,localhost,test,,"*NO-ONE*";
+CONNECT  conn2,localhost,test,,"*NO-ONE*";
 ERROR 42000: User test already has more than 'max_user_connections' active connections
 Expected error "too many connections"
 disconnect conn1;
@@ -14,8 +14,8 @@ disconnect conn1;
 '#--------------------FN_DYNVARS_114_02-------------------------#'
 connection default;
 Set Global max_user_connections=3;
-CONNECT  conn5,localhost,test,,;
-CONNECT  conn6,localhost,test,,;
+CONNECT  conn5,localhost,test,,"*NO-ONE*";
+CONNECT  conn6,localhost,test,,"*NO-ONE*";
 connection default;
 disconnect conn2;
 disconnect conn5;

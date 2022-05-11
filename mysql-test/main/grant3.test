@@ -27,7 +27,7 @@ flush privileges;
 create user mysqltest_1@localhost;
 grant create user on *.* to mysqltest_1@localhost;
 grant select on `my\_1`.* to mysqltest_1@localhost with grant option;
-connect (user_a,localhost,mysqltest_1,,);
+connect (user_a,localhost,mysqltest_1,,"*NO-ONE*");
 connection user_a;
 --error ER_CANT_CREATE_USER_WITH_GRANT
 grant select on `my\_1`.* to mysqltest_2@localhost;
@@ -160,7 +160,7 @@ REVOKE SELECT ON `mysqltest_1`.* FROM 'mysqltest1'@'%';
 GRANT SELECT, UPDATE ON `mysqltest\_1`.* TO 'mysqltest1'@'%';
 FLUSH PRIVILEGES;
 
-connect (conn1,localhost,mysqltest1,,);
+connect (conn1,localhost,mysqltest1,,"*NO-ONE*");
 connection conn1;
 SHOW GRANTS;
 SELECT * FROM mysqltest_1.t1;
@@ -191,7 +191,7 @@ GRANT SELECT (a), INSERT (b) ON `temp`.`t1` TO 'user2'@'%';
 SHOW GRANTS FOR 'user2'@'%';
 
 --echo # Connect as the renamed user
-connect (conn1, localhost, user2,,);
+connect (conn1, localhost, user2,,"*NO-ONE*");
 connection conn1;
 SHOW GRANTS;
 SELECT a FROM temp.t1;

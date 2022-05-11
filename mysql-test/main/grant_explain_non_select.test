@@ -21,11 +21,9 @@ INSERT INTO privtest_db.t2 VALUES (1), (2), (3);
 GRANT USAGE ON *.* TO 'privtest'@'localhost';
 GRANT SELECT ON privtest_db.t2 TO 'privtest'@'localhost';
 
-connect(con1,localhost,privtest,,);
+connect(con1,localhost,privtest,,privtest_db);
 connection con1;
 --source include/default_optimizer_switch.inc
-
-USE privtest_db;
 
 --error ER_TABLEACCESS_DENIED_ERROR
 EXPLAIN INSERT INTO t1 VALUES (10);

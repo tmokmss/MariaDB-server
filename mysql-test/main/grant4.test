@@ -205,7 +205,7 @@ insert into mysqltest_db1.t2 values (1);
 --echo # Create user which will try to do this.
 create user mysqltest_u1@localhost;
 grant insert, select on mysqltest_db1.t1 to mysqltest_u1@localhost;
-connect (con1,localhost,mysqltest_u1,,);
+connect (con1,localhost,mysqltest_u1,,"*NO-ONE*");
 connection default;
 
 --echo # Corrupt t1 by replacing t1.MYI with a corrupt + unclosed one created

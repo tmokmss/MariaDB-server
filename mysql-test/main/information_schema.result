@@ -842,7 +842,7 @@ Database	Table	In_use	Name_locked
 mysql	user	0	0
 show status where variable_name like "%database%";
 Variable_name	Value
-Acl_database_grants	2
+Acl_database_grants	0
 Com_show_databases	3
 show variables where variable_name like "skip_show_databas";
 Variable_name	Value
@@ -1936,7 +1936,7 @@ USE db1;
 CREATE TABLE t1 (id INT);
 CREATE USER nonpriv;
 USE test;
-connect  nonpriv_con, localhost, nonpriv,,;
+connect  nonpriv_con, localhost, nonpriv,,"*NO-ONE*";
 connection nonpriv_con;
 # connected as nonpriv
 # Should return 0
@@ -1984,7 +1984,7 @@ DROP TABLE ubig;
 select 1 from information_schema.tables where table_schema=repeat('a', 2000);
 1
 grant usage on *.* to mysqltest_1@localhost;
-connect  con1, localhost, mysqltest_1,,;
+connect  con1, localhost, mysqltest_1,,"*NO-ONE*";
 connection con1;
 select 1 from information_schema.tables where table_schema=repeat('a', 2000);
 1

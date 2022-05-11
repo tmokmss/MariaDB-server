@@ -7,14 +7,14 @@ INSTALL SONAME 'auth_gssapi';
 CREATE USER 'nosuchgroup' IDENTIFIED WITH gssapi AS 'GROUP:nosuchgroup';
 replace_result $MASTER_MYSOCK MASTER_MYSOCK $MASTER_MYPORT MASTER_MYPORT;
 error ER_ACCESS_DENIED_ERROR;
-connect (con1,localhost,nosuchuser,,);
+connect (con1,localhost,nosuchuser,,"*NO-ONE*");
 DROP USER nosuchgroup;
 
 # Group with no members, NULL SID
 CREATE USER 'nullsid' IDENTIFIED WITH gssapi AS 'SID:S-1-0-0';
 replace_result $MASTER_MYSOCK MASTER_MYSOCK $MASTER_MYPORT MASTER_MYPORT;
 error ER_ACCESS_DENIED_ERROR;
-connect (con1,localhost,nullsid,,);
+connect (con1,localhost,nullsid,,"*NO-ONE*");
 DROP USER nullsid;
 
 
@@ -22,7 +22,7 @@ DROP USER nullsid;
 CREATE USER 'anonymous' IDENTIFIED WITH gssapi AS 'SID:AN';
 replace_result $MASTER_MYSOCK MASTER_MYSOCK $MASTER_MYPORT MASTER_MYPORT;
 error ER_ACCESS_DENIED_ERROR;
-connect (con1,localhost,anonymous,,);
+connect (con1,localhost,anonymous,,"*NO-ONE*");
 DROP USER anonymous;
 
 
@@ -31,7 +31,7 @@ DROP USER anonymous;
 # Everyone group
 CREATE USER 'group_everyone' IDENTIFIED WITH gssapi AS 'GROUP:Everyone';
 replace_result $MASTER_MYSOCK MASTER_MYSOCK $MASTER_MYPORT MASTER_MYPORT;
-connect (con1,localhost,group_everyone,,);
+connect (con1,localhost,group_everyone,,"*NO-ONE*");
 disconnect con1;
 connection default;
 DROP USER group_everyone;
@@ -39,7 +39,7 @@ DROP USER group_everyone;
 # Everyone AS well-known SID name
 CREATE USER 'sid_wd' IDENTIFIED WITH gssapi AS 'SID:WD';
 replace_result $MASTER_MYSOCK MASTER_MYSOCK $MASTER_MYPORT MASTER_MYPORT;
-connect (con1,localhost,sid_wd,,);
+connect (con1,localhost,sid_wd,,"*NO-ONE*");
 disconnect con1;
 connection default;
 DROP USER sid_wd;
@@ -47,7 +47,7 @@ DROP USER sid_wd;
 # Everyone AS SID S-1-1-0
 CREATE USER 'S_1_1_0' IDENTIFIED WITH gssapi AS 'SID:S-1-1-0';
 replace_result $MASTER_MYSOCK MASTER_MYSOCK $MASTER_MYPORT MASTER_MYPORT;
-connect (con1,localhost,S_1_1_0,,);
+connect (con1,localhost,S_1_1_0,,"*NO-ONE*");
 disconnect con1;
 connection default;
 DROP USER S_1_1_0;
@@ -55,7 +55,7 @@ DROP USER S_1_1_0;
 replace_result $GSSAPI_SHORTNAME GSSAPI_SHORTNAME;
 eval CREATE USER 'me_short' IDENTIFIED WITH gssapi AS 'GROUP:$GSSAPI_SHORTNAME';
 replace_result $MASTER_MYSOCK MASTER_MYSOCK $MASTER_MYPORT MASTER_MYPORT;
-connect (con1,localhost,me_short,,);
+connect (con1,localhost,me_short,,"*NO-ONE*");
 disconnect con1;
 connection default;
 DROP USER me_short;
@@ -64,7 +64,7 @@ DROP USER me_short;
 replace_result $SID MY-SID;
 eval CREATE USER 'me_sid' IDENTIFIED WITH gssapi AS 'SID:$SID';
 replace_result $MASTER_MYSOCK MASTER_MYSOCK $MASTER_MYPORT MASTER_MYPORT;
-connect (con1,localhost,me_sid,,);
+connect (con1,localhost,me_sid,,"*NO-ONE*");
 disconnect con1;
 connection default;
 DROP USER me_sid;

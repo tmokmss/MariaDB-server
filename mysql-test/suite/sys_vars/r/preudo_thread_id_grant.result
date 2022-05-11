@@ -6,7 +6,7 @@ SET @session=@@session.pseudo_thread_id;
 CREATE USER user1@localhost;
 GRANT ALL PRIVILEGES ON *.* TO user1@localhost;
 REVOKE BINLOG REPLAY, SUPER ON *.* FROM user1@localhost;
-connect user1,localhost,user1,,;
+connect user1,localhost,user1,,"*NO-ONE*";
 connection user1;
 SET GLOBAL pseudo_thread_id=1;
 ERROR HY000: Variable 'pseudo_thread_id' is a SESSION variable and can't be used with SET GLOBAL
@@ -20,7 +20,7 @@ DROP USER user1@localhost;
 # Test that "SET pseudo_thread_id" is allowed with BINLOG REPLAY
 CREATE USER user1@localhost;
 GRANT BINLOG REPLAY ON *.* TO user1@localhost;
-connect user1,localhost,user1,,;
+connect user1,localhost,user1,,"*NO-ONE*";
 connection user1;
 SET GLOBAL pseudo_thread_id=1;
 ERROR HY000: Variable 'pseudo_thread_id' is a SESSION variable and can't be used with SET GLOBAL
@@ -32,7 +32,7 @@ DROP USER user1@localhost;
 # Test that "SET pseudo_thread_id" is allowed with SUPER
 CREATE USER user1@localhost;
 GRANT SUPER ON *.* TO user1@localhost;
-connect user1,localhost,user1,,;
+connect user1,localhost,user1,,"*NO-ONE*";
 connection user1;
 SET GLOBAL pseudo_thread_id=1;
 ERROR HY000: Variable 'pseudo_thread_id' is a SESSION variable and can't be used with SET GLOBAL

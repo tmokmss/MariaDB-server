@@ -9,7 +9,7 @@ insert into t1 values (1,'foo'),(2,'bar'),(3,'baz'),(4,'qux');
 create view v1 as select * from t1 where i > 1;
 CREATE USER u1@localhost;
 grant ALL on db.v1 to u1@localhost;
-connect  con1,localhost,u1,,;
+connect  con1,localhost,u1,,"*NO-ONE*";
 select * from db.t1;
 ERROR 42000: SELECT command denied to user 'u1'@'localhost' for table 't1'
 explain select * from db.t1;

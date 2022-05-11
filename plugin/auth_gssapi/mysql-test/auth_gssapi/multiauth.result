@@ -2,10 +2,10 @@ INSTALL SONAME 'auth_gssapi';
 Warnings:
 Note	1105	SSPI: using principal name 'localhost', mech 'Negotiate'
 CREATE USER 'nosuchuser' IDENTIFIED WITH gssapi OR mysql_native_password as password("good");
-connect(localhost,nosuchuser,,test,MASTER_MYPORT,MASTER_MYSOCK);
-connect  con1,localhost,nosuchuser,,;
+connect(localhost,nosuchuser,,,MASTER_MYPORT,MASTER_MYSOCK);
+connect  con1,localhost,nosuchuser,,"*NO-ONE*";
 ERROR 28000: Access denied for user 'nosuchuser'@'localhost' (using password: NO)
-connect  con1,localhost,nosuchuser,good,;
+connect  con1,localhost,nosuchuser,good,"*NO-ONE*";
 SELECT USER(),CURRENT_USER();
 USER()	CURRENT_USER()
 nosuchuser@localhost	nosuchuser@%
@@ -13,10 +13,10 @@ disconnect con1;
 connection default;
 DROP USER nosuchuser;
 CREATE USER 'nosuchuser' IDENTIFIED WITH mysql_native_password as password("good") OR gssapi;
-connect(localhost,nosuchuser,,test,MASTER_MYPORT,MASTER_MYSOCK);
-connect  con1,localhost,nosuchuser,,;
+connect(localhost,nosuchuser,,,MASTER_MYPORT,MASTER_MYSOCK);
+connect  con1,localhost,nosuchuser,,"*NO-ONE*";
 ERROR 28000: GSSAPI name mismatch, requested 'nosuchuser', actual name 'GSSAPI_SHORTNAME'
-connect  con1,localhost,nosuchuser,good,;
+connect  con1,localhost,nosuchuser,good,"*NO-ONE*";
 SELECT USER(),CURRENT_USER();
 USER()	CURRENT_USER()
 nosuchuser@localhost	nosuchuser@%
@@ -24,7 +24,7 @@ disconnect con1;
 connection default;
 DROP USER nosuchuser;
 CREATE USER 'GSSAPI_SHORTNAME' IDENTIFIED WITH mysql_native_password as password("good") OR gssapi;
-connect  con1,localhost,$GSSAPI_SHORTNAME,,;
+connect  con1,localhost,$GSSAPI_SHORTNAME,,"*NO-ONE*";
 SELECT USER(),CURRENT_USER();
 USER()	CURRENT_USER()
 GSSAPI_SHORTNAME@localhost	GSSAPI_SHORTNAME@%

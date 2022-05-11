@@ -1,6 +1,6 @@
 INSTALL SONAME 'auth_named_pipe';
 CREATE USER 'USERNAME' IDENTIFIED WITH named_pipe;
-connect pipe_con,localhost,$USERNAME,,,,,PIPE;
+connect pipe_con,localhost,$USERNAME,,"*NO-ONE*",,,PIPE;
 SELECT USER(),CURRENT_USER();
 USER()	CURRENT_USER()
 USERNAME@localhost	USERNAME@%

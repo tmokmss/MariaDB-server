@@ -11,7 +11,7 @@ SET @global=@@global.max_connect_errors;
 CREATE USER user1@localhost;
 GRANT ALL PRIVILEGES ON *.* TO user1@localhost;
 REVOKE CONNECTION ADMIN, SUPER ON *.* FROM user1@localhost;
---connect(user1,localhost,user1,,)
+--connect(user1,localhost,user1,,"*NO-ONE*")
 --connection user1
 --error ER_SPECIFIC_ACCESS_DENIED_ERROR
 SET GLOBAL max_connect_errors=10;
@@ -27,7 +27,7 @@ DROP USER user1@localhost;
 
 CREATE USER user1@localhost;
 GRANT CONNECTION ADMIN ON *.* TO user1@localhost;
---connect(user1,localhost,user1,,)
+--connect(user1,localhost,user1,,"*NO-ONE*")
 --connection user1
 SET GLOBAL max_connect_errors=10;
 --error ER_GLOBAL_VARIABLE
@@ -42,7 +42,7 @@ DROP USER user1@localhost;
 
 CREATE USER user1@localhost;
 GRANT SUPER ON *.* TO user1@localhost;
---connect(user1,localhost,user1,,)
+--connect(user1,localhost,user1,,"*NO-ONE*")
 --connection user1
 SET GLOBAL max_connect_errors=10;
 --error ER_GLOBAL_VARIABLE

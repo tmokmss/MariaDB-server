@@ -43,7 +43,7 @@ DROP USER user1@localhost;
 #
 CREATE USER user1@localhost IDENTIFIED BY '';
 GRANT SUPER ON *.* TO user1@localhost;
-connect con1,localhost,user1,,;
+connect con1,localhost,user1,,"*NO-ONE*";
 SHOW SLAVE STATUS;
 #
 # SHOW RELAYLOG EVENTS is not allowed with SUPER privilege, it requires SLAVE MONITOR

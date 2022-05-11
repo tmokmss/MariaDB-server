@@ -392,7 +392,7 @@ update mysql.user set password=authentication_string, authentication_string='' w
 select password,plugin,authentication_string from mysql.user where user='user3';
 flush privileges;
 show create user user3@localhost;
-connect con1,localhost,user3,a_password;
+connect con1,localhost,user3,a_password,"*NO-ONE*";
 select current_user();
 disconnect con1;
 connection default;
@@ -400,7 +400,7 @@ connection default;
 --exec $MYSQL_UPGRADE --force --silent 2>&1
 --remove_file $MYSQLD_DATADIR/mysql_upgrade_info
 show create user user3@localhost;
-connect con1,localhost,user3,a_password;
+connect con1,localhost,user3,a_password,"*NO-ONE*";
 select current_user();
 disconnect con1;
 connection default;
@@ -462,7 +462,7 @@ FLUSH PRIVILEGES;
 --exec $MYSQL_UPGRADE --force 2>&1
 # Should not have "PASSWORD EXPIRED"
 SHOW CREATE USER mariadb_102;
-connect con1,localhost,mariadb_102;
+connect con1,localhost,mariadb_102,,"*NO-ONE*";
 select current_user();
 disconnect con1;
 connection default;

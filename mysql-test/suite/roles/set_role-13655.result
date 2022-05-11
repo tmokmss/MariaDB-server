@@ -31,7 +31,7 @@ grant all on t.* to admin;
 #
 create user foo;
 grant admin to foo;
-connect  foo,localhost,foo,,,,,;
+connect  foo,localhost,foo,,"*NO-ONE*",,,;
 create database t;
 ERROR 42000: Access denied for user 'foo'@'%' to database 't'
 set role admin;

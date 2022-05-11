@@ -20,7 +20,7 @@ DROP USER user1@localhost;
 # Test that "SET binlog_row_metadata" is allowed with BINLOG ADMIN
 CREATE USER user1@localhost;
 GRANT BINLOG ADMIN ON *.* TO user1@localhost;
-connect user1,localhost,user1,,;
+connect user1,localhost,user1,,"*NO-ONE*";
 connection user1;
 SET GLOBAL binlog_row_metadata=NO_LOG;
 SET binlog_row_metadata=NO_LOG;
@@ -33,7 +33,7 @@ DROP USER user1@localhost;
 # Test that "SET binlog_row_metadata" is allowed with SUPER
 CREATE USER user1@localhost;
 GRANT SUPER ON *.* TO user1@localhost;
-connect user1,localhost,user1,,;
+connect user1,localhost,user1,,"*NO-ONE*";
 connection user1;
 SET GLOBAL binlog_row_metadata=NO_LOG;
 SET binlog_row_metadata=NO_LOG;

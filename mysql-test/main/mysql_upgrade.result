@@ -1963,7 +1963,7 @@ flush privileges;
 show create user user3@localhost;
 CREATE USER for user3@localhost
 CREATE USER `user3`@`localhost` IDENTIFIED BY PASSWORD '*5DC1D11F45824A9DD613961F05C1EC1E7A1601AA' PASSWORD EXPIRE NEVER
-connect con1,localhost,user3,a_password;
+connect con1,localhost,user3,a_password,"*NO-ONE*";
 select current_user();
 current_user()
 user3@localhost
@@ -1973,7 +1973,7 @@ connection default;
 show create user user3@localhost;
 CREATE USER for user3@localhost
 CREATE USER `user3`@`localhost` IDENTIFIED BY PASSWORD '*5DC1D11F45824A9DD613961F05C1EC1E7A1601AA'
-connect con1,localhost,user3,a_password;
+connect con1,localhost,user3,a_password,"*NO-ONE*";
 select current_user();
 current_user()
 user3@localhost
@@ -2163,7 +2163,7 @@ OK
 SHOW CREATE USER mariadb_102;
 CREATE USER for mariadb_102@%
 CREATE USER `mariadb_102`@`%`
-connect con1,localhost,mariadb_102;
+connect con1,localhost,mariadb_102,,"*NO-ONE*";
 select current_user();
 current_user()
 mariadb_102@%

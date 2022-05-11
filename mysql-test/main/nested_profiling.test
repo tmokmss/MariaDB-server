@@ -27,7 +27,7 @@ SET GLOBAL init_connect="set @a=2;set @b=3";
 SET GLOBAL profiling=on;
 
 create user mysqltest1@localhost;
-connect (con1,localhost,mysqltest1,,);
+connect (con1,localhost,mysqltest1,,"*NO-ONE*");
 connection con1;
 SELECT @a, @b;
 --replace_column 2 #

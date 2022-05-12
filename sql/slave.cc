@@ -7189,33 +7189,8 @@ dbug_gtid_accept:
       mi->gtid_current_pos.update(&mi->last_queued_gtid);
       mi->events_queued_since_last_gtid= 0;
 
-      if (unlikely(gtid_skip_enqueue))
-      {
-        error= ER_SLAVE_RELAY_LOG_WRITE_FAILURE;
-        sql_print_error("Recieved a group closing %s event "
-                        "at %llu position in the group while there are "
-                        "still %llu events to skip upon reconnecting; "
-                        "the last seen GTID is %u-%u-%llu",
-                        Log_event::get_type_str((Log_event_type) (uchar)
-                                                buf[EVENT_TYPE_OFFSET]),
-                        (mi->events_queued_since_last_gtid -
-                         mi->gtid_reconnect_event_skip_count),
-                        mi->events_queued_since_last_gtid,
-                        mi->last_queued_gtid);
-        goto err;
-      }
-      else
-      {
-        /*
-          The whole of the current event group is queued. So in case of
-          reconnect we can start from after the current GTID.
-        */
-        mi->gtid_current_pos.update(&mi->last_queued_gtid);
-        mi->events_queued_since_last_gtid= 0;
-
-        /* Reset the domain_id_filter flag. */
-        mi->domain_id_filter.reset_filter();
-      }
+      /* Reset the domain_id_filter flag. */
+      mi->domain_id_filter.reset_filter();
     }
 
 skip_relay_logging:

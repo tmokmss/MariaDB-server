@@ -384,6 +384,7 @@ POSITION::POSITION()
   records_read= cond_selectivity= read_time= 0.0;
   prefix_record_count= 0.0;
   key= 0;
+  type= JT_UNKNOWN;
   use_join_buffer= 0;
   sj_strategy= SJ_OPT_NONE;
   n_sj_tables= 0;

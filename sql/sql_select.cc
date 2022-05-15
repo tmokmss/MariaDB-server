@@ -9163,8 +9163,13 @@ greedy_search(JOIN      *join,
     while (pos && best_table != pos)
       pos= join->best_ref[++best_idx];
     DBUG_ASSERT((pos != NULL)); // should always find 'best_table'
-    /* move 'best_table' at the first free position in the array of joins */
-    swap_variables(JOIN_TAB*, join->best_ref[idx], join->best_ref[best_idx]);
+    /*
+      move 'best_table' at the first free position in the array of joins,
+      keeping the sorted table order intact
+    */
+    memmove(join->best_ref + idx + 1, join->best_ref + idx,
+            sizeof(JOIN_TAB*) * (best_idx - idx));
+    join->best_ref[idx]= best_table;
 
     /* compute the cost of the new plan extended with 'best_table' */
     record_count= COST_MULT(record_count, join->positions[idx].records_read);
@@ -9912,6 +9917,8 @@ best_extension_by_limited_search(JOIN      *join,
      so continue expanding it further with the tables in 'remaining_tables'.
   */
   JOIN_TAB *s;
+  JOIN_TAB **original_ref_order=
+    (JOIN_TAB**) alloca(sizeof(join->best_ref[0]) * (join->table_count - idx));
   double best_record_count= DBL_MAX;
   double best_read_time=    DBL_MAX;
   bool disable_jbuf= join->thd->variables.join_cache_level == 0;
@@ -9931,7 +9938,11 @@ best_extension_by_limited_search(JOIN      *join,
   DBUG_EXECUTE("opt", print_plan(join, idx, record_count, read_time, read_time,
                                 "part_plan"););
 
-  /* 
+  /* Remember original table order */
+  memcpy(original_ref_order, join->best_ref + idx,
+         (join->table_count - idx) * sizeof(join->best_ref[0]));
+
+  /*
     If we are searching for the execution plan of a materialized semi-join nest
     then allowed_tables contains bits only for the tables from this nest.
   */
@@ -9942,6 +9953,8 @@ best_extension_by_limited_search(JOIN      *join,
   for (JOIN_TAB **pos= join->best_ref + idx ; (s= *pos) ; pos++)
   {
     table_map real_table_bit= s->table->map;
+
+    swap_variables(JOIN_TAB*, join->best_ref[idx], *pos);
     if ((remaining_tables & real_table_bit) &&
         (allowed_tables & real_table_bit) &&
         !(remaining_tables & s->dependent) &&
@@ -10055,7 +10068,6 @@ best_extension_by_limited_search(JOIN      *join,
           allowed_tables)
       {
         /* Recursively expand the current partial plan */
-        swap_variables(JOIN_TAB*, join->best_ref[idx], *pos);
         Json_writer_array trace_rest(thd, "rest_of_plan");
         best_res=
           best_extension_by_limited_search(join,
@@ -10068,8 +10080,7 @@ best_extension_by_limited_search(JOIN      *join,
                                            prune_level,
                                            use_cond_selectivity);
         if ((int) best_res < (int) SEARCH_OK)
-          DBUG_RETURN(best_res);                // Abort
-        swap_variables(JOIN_TAB*, join->best_ref[idx], *pos);
+          goto end;                             // Return best_res
         if (best_res == SEARCH_FOUND_EDGE &&
             check_if_edge_table(join->positions+ idx,
                                 pushdown_cond_selectivity) !=
@@ -10114,11 +10125,17 @@ best_extension_by_limited_search(JOIN      *join,
       if (best_res == SEARCH_FOUND_EDGE)
       {
         trace_one_table.add("pruned_by_hanging_leaf", true);
-        DBUG_RETURN(best_res);
+        goto end;
       }
     }
   }
-  DBUG_RETURN(SEARCH_OK);
+  best_res= SEARCH_OK;
+
+end:
+  /* Restore original table order */
+  memcpy(join->best_ref + idx, original_ref_order,
+         (join->table_count - idx) * sizeof(join->best_ref[0]));
+  DBUG_RETURN(best_res);
 }
 
 

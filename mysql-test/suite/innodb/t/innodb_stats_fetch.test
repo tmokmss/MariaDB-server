@@ -77,3 +77,12 @@ table_rows, avg_row_length, max_data_length, index_length
 FROM information_schema.tables WHERE table_name = 'test_ps_fetch';
 
 DROP TABLE test_ps_fetch;
+
+
+--echo #
+--echo # MDEV-28613 LeakSanitizer caused by I_S query using LIMIT ROWS EXAMINED
+--echo #
+--error ER_UNKNOWN_ERROR
+SELECT * FROM INFORMATION_SCHEMA.INNODB_SYS_INDEXES LIMIT ROWS EXAMINED 5;
+
+--source include/restart_mysqld.inc

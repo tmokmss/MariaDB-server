@@ -5616,6 +5616,7 @@ i_s_sys_indexes_fill_table(
 			if (int err = i_s_dict_fill_sys_indexes(
 				    thd, table_id, space_id, &index_rec,
 				    tables->table)) {
+				btr_pcur_close(&pcur);
 				mem_heap_free(heap);
 				DBUG_RETURN(err);
 			}

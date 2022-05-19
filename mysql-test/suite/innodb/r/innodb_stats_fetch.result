@@ -143,3 +143,8 @@ avg_row_length	81
 max_data_length	0
 index_length	16384
 DROP TABLE test_ps_fetch;
+#
+# MDEV-28613 LeakSanitizer caused by I_S query using LIMIT ROWS EXAMINED
+#
+SELECT * FROM INFORMATION_SCHEMA.INNODB_SYS_INDEXES LIMIT ROWS EXAMINED 5;
+ERROR HY000: Unknown error

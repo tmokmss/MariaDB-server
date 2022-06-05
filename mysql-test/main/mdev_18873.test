@@ -1,0 +1,14 @@
+#
+# MDEV-18873 Server crashes in Compare_identifiers::operator or in 
+# my_strcasecmp_utf8 upon ADD PERIOD IF NOT EXISTS with empty name
+#
+
+# When there is no table defined.
+--error ER_WRONG_COLUMN_NAME
+ALTER TABLE t ADD PERIOD IF NOT EXISTS FOR `` (s,e);
+
+# When there is an actual table.
+CREATE TABLE t(s DATE, e DATE);
+--error ER_WRONG_COLUMN_NAME
+ALTER TABLE t ADD PERIOD IF NOT EXISTS FOR `` (s,e);
+DROP TABLE t;

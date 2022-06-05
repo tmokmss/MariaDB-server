@@ -1,0 +1,6 @@
+ALTER TABLE t ADD PERIOD IF NOT EXISTS FOR `` (s,e);
+ERROR 42000: Incorrect column name ''
+CREATE TABLE t(s DATE, e DATE);
+ALTER TABLE t ADD PERIOD IF NOT EXISTS FOR `` (s,e);
+ERROR 42000: Incorrect column name ''
+DROP TABLE t;

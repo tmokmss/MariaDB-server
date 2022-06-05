@@ -1,0 +1,5 @@
+#
+# MDEV-18873 Server crashes in Compare_identifiers::operator or in my_strcasecmp_utf8 upon ADD PERIOD IF NOT EXISTS with empty name
+#
+--error ER_NO_SUCH_TABLE
+ALTER TABLE t ADD PERIOD IF NOT EXISTS FOR `` (s,e);

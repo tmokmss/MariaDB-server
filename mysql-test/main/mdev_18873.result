@@ -1,0 +1,2 @@
+ALTER TABLE t ADD PERIOD IF NOT EXISTS FOR `` (s,e);
+ERROR 42S02: Table 'test.t' doesn't exist

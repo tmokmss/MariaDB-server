@@ -6,7 +6,7 @@
 --error ER_WRONG_COLUMN_NAME
 ALTER TABLE t ADD PERIOD IF NOT EXISTS FOR `` (s,e);
 
-# When there is an actual table
+# When there is an actual table.
 CREATE TABLE t(s DATE, e DATE);
 --error ER_WRONG_COLUMN_NAME
 ALTER TABLE t ADD PERIOD IF NOT EXISTS FOR `` (s,e);

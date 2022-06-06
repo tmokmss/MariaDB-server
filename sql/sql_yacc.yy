@@ -6684,6 +6684,8 @@ period_for_system_time:
 period_for_application_time:
           FOR_SYM ident '(' ident ',' ident ')'
           {
+            if (unlikely(check_period_name($2.str)))
+              my_yyabort_error((ER_WRONG_COLUMN_NAME, MYF(0), $2.str));
             if (Lex->add_period($2, $4, $6))
               MYSQL_YYABORT;
           }

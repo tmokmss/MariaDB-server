@@ -1,5 +1,6 @@
 #
-# MDEV-18873 Server crashes in Compare_identifiers::operator or in my_strcasecmp_utf8 upon ADD PERIOD IF NOT EXISTS with empty name
+# MDEV-18873 Server crashes in Compare_identifiers::operator or in 
+# my_strcasecmp_utf8 upon ADD PERIOD IF NOT EXISTS with empty name
 #
 
 # When there is no table defined.

@@ -3214,9 +3214,6 @@ enum open_frm_error open_table_from_share(THD *thd, TABLE_SHARE *share,
                        uint ha_open_flags, TABLE *outparam,
                        bool is_create_table,
                        List<String> *partitions_to_open= NULL);
-bool fix_session_vcol_expr(THD *thd, Virtual_column_info *vcol);
-bool fix_session_vcol_expr_for_read(THD *thd, Field *field,
-                                    Virtual_column_info *vcol);
 bool parse_vcol_defs(THD *thd, MEM_ROOT *mem_root, TABLE *table,
                      bool *error_reported, vcol_init_mode expr);
 TABLE_SHARE *alloc_table_share(const char *db, const char *table_name,
@@ -3233,6 +3230,7 @@ void open_table_error(TABLE_SHARE *share, enum open_frm_error error,
 void update_create_info_from_table(HA_CREATE_INFO *info, TABLE *form);
 bool check_db_name(LEX_STRING *db);
 bool check_column_name(const char *name);
+bool check_period_name(const char *name);
 bool check_table_name(const char *name, size_t length, bool check_for_path_chars);
 int rename_file_ext(const char * from,const char * to,const char * ext);
 char *get_field(MEM_ROOT *mem, Field *field);
